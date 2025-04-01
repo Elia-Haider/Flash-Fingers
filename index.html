@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flash Fingers - Typing Game</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            text-align: center;
+            background: linear-gradient(135deg, #1e1e2e, #2a2a3d);
+            color: #ffffff;
+            margin: 0;
+            padding: 40px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        h1 {
+            font-size: 48px;
+            margin-bottom: 30px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            color: #00ffcc;
+            letter-spacing: 2px;
+        }
+        #iconContainer {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            display: flex;
+            gap: 15px;
+        }
+        #homeIcon, #soundIcon, #resetIcon, #aboutIcon {
+            font-size: 28px;
+            cursor: pointer;
+            color: #ffffff;
+            transition: transform 0.3s, color 0.3s;
+            padding: 8px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+        }
+        #homeIcon:hover, #soundIcon:hover, #resetIcon:hover, #aboutIcon:hover {
+            color: #00ffcc;
+            transform: scale(1.2);
+        }
+        #homeIcon {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+        #display {
+            font-size: 28px;
+            margin: 20px 0;
+            background: rgba(40, 42, 54, 0.9);
+            padding: 20px 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            max-width: 600px;
+            backdrop-filter: blur(5px);
+        }
+        #inputDisplay {
+            display: none;
+        }
+        #stats, #highScore, #message {
+            font-size: 20px;
+            margin-top: 25px;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        #startButton, #restartButton {
+            padding: 15px 35px;
+            font-size: 22px;
+            margin-top: 25px;
+            cursor: pointer;
+            border: none;
+            border-radius: 25px;
+            background: linear-gradient(45deg, #4caf50, #66bb6a);
+            color: white;
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.4);
+        }
+        #startButton:hover, #restartButton:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.6);
+        }
+        #typingBox {
+            font-size: 26px;
+            margin: 15px auto;
+            padding: 15px;
+            border: 3px solid #00ffcc;
+            width: 400px;
+            height: 60px;
+            text-align: center;
+            background: rgba(51, 51, 51, 0.8);
+            border-radius: 12px;
+            color: #ffffff;
+            box-shadow: 0 0 15px rgba(0, 255, 204, 0.3);
+            transition: border-color 0.3s;
+        }
+        #typingBox:focus {
+            outline: none;
+            border-color: #00ccff;
+        }
+        .green-text {
+            color: #00ff00;
+            text-shadow: 0 0 5px rgba(0, 255, 0, 0.5);
+        }
+        .red-text {
+            color: #ff4444;
+            text-shadow: 0 0 5px rgba(255, 68, 68, 0.5);
+        }
+        #statusIndicator {
+            width: 120px;
+            height: 40px;
+            background: linear-gradient(45deg, #ff4444, #ff6666);
+            margin: 20px auto;
+            border-radius: 20px;
+            line-height: 40px;
+            font-size: 20px;
+            font-weight: bold;
+            box-shadow: 0 2px 10px rgba(255, 68, 68, 0.3);
+            transition: background 0.3s;
+        }
+        #statusIndicator.green {
+            background: linear-gradient(45deg, #4caf50, #66bb6a);
+            box-shadow: 0 2px 10px rgba(76, 175, 80, 0.3);
+        }
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(40, 42, 54, 0.95);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            width: 350px;
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+        .modal-header {
+            font-size: 20px;
+            margin-bottom: 20px;
+            color: #00ffcc;
+            cursor: pointer;
+        }
+        .modal-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 24px;
+            color: #ff4444;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        .modal-close:hover {
+            color: #ff6666;
+        }
+        .modal-buttons {
+            display: flex;
+            justify-content: space-around;
+        }
+        .modal-button {
+            padding: 10px 20px;
+            font-size: 18px;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.3s;
+            width: 100px;
+        }
+        #soundOnButton.green, #soundOffButton.green {
+            background: linear-gradient(45deg, #4caf50, #66bb6a);
+            color: white;
+        }
+        #soundOnButton.grey, #soundOffButton.grey {
+            background: linear-gradient(45deg, #666, #999);
+            color: white;
+        }
+        #yesButton, #noButton {
+            background: linear-gradient(45deg, #4caf50, #66bb6a);
+            color: white;
+        }
+        .modal-button:hover {
+            transform: translateY(-2px);
+        }
+        .modal-content {
+            display: none;
+            font-size: 16px;
+            text-align: left;
+            color: #ffffff;
+        }
+        .modal-content.active {
+            display: block;
+        }
+        .modal-content a {
+            color: #00ffcc;
+            text-decoration: none;
+        }
+        .modal-content a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div id="iconContainer">
+        <span id="soundIcon">🔊</span>
+        <span id="resetIcon">⚙️</span>
+        <span id="aboutIcon">ℹ️</span>
+    </div>
+    <span id="homeIcon">🏠</span>
+    <h1>Flash Fingers - Typing Game</h1>
+    <button id="startButton">Start</button>
+    <div id="statusIndicator">0.00</div>
+    <div id="display" style="display: none;"></div>
+    <div id="inputDisplay" style="display: none;"></div>
+    <div id="typingBox" style="display: none;"></div>
+    <div id="stats"></div>
+    <div id="highScore">High Score: <span id="highScoreValue"></span> 🏆</div>
+    <div id="message"></div>
+    <button id="restartButton" style="display: none;">Restart</button>
+    
+    <!-- Sound Settings Modal -->
+    <div id="soundModal" class="modal">
+        <span id="soundModalClose" class="modal-close">✖</span>
+        <div class="modal-header">Sound Settings</div>
+        <div class="modal-buttons">
+            <button id="soundOnButton" class="modal-button">ON</button>
+            <button id="soundOffButton" class="modal-button">OFF</button>
+        </div>
+    </div>
+
+    <!-- Reset High Score Modal -->
+    <div id="resetModal" class="modal">
+        <span id="resetModalClose" class="modal-close">✖</span>
+        <div class="modal-header">Do you want to reset high score?</div>
+        <div class="modal-buttons">
+            <button id="yesButton" class="modal-button">Yes</button>
+            <button id="noButton" class="modal-button">No</button>
+        </div>
+    </div>
+
+    <!-- About Modal -->
+    <div id="aboutModal" class="modal">
+        <span id="aboutModalClose" class="modal-close">✖</span>
+        <div class="modal-header" id="howToPlayHeader">How to Play</div>
+        <div class="modal-header" id="aboutGameHeader">About Game</div>
+        <div class="modal-header" id="aboutCreatorHeader">About Creator</div>
+        <div class="modal-header" id="contactHeader">Contact Info</div>
+        <div id="howToPlayContent" class="modal-content active">
+    <p>1. Click "Start" to begin.<br>
+    2. Type the sentence shown in the display area.<br>
+    3. Correct letters turn green, wrong ones turn red.<br>
+    4. Press Enter when finished to see your stats.<br>
+    After typing the full sentence and pressing Enter, your result will appear below the typing area. It shows four things:<br>
+    - <strong>Time Taken</strong>: How many seconds you took to type (matches the timer).<br>
+    - <strong>Penalty</strong>: Extra time added (0.5 seconds per mistake).<br>
+    - <strong>Mistakes</strong>: Number of wrong letters you typed.<br>
+    - <strong>Accuracy</strong>: Percentage of correct letters (out of total).<br>
+    If your accuracy is 90% or higher and your total time (Time Taken + Penalty) beats the high score, you’ll see a "High Score Broken!" message!<br>
+    5. Use the sound icon (🔊) to toggle sound on/off.<br>
+    6. Use the reset icon (⚙️) to reset high score.<br>
+      7. Use the home icon (🏠) to restart the game.</p>
+        </div>
+        <div id="aboutGameContent" class="modal-content">
+            <p>This game, "Flash Fingers," was created to help improve typing speed and accuracy. The purpose is to provide a fun and interactive way to practice typing skills while enjoying sound effects and a sleek design.</p>
+        </div>
+        <div id="aboutCreatorContent" class="modal-content">
+            <p>This game was developed by Elia Haider from Baltistan, Pakistan. I’m passionate about coding and creating engaging experiences for users.</p>
+        </div>
+        <div id="contactContent" class="modal-content">
+            <p>Email: <a href="mailto:haiderhashmi1120@gmail.com">haiderhashmi1120@gmail.com</a><br>
+            YouTube: <a href="https://www.youtube.com/channel/UCAaSY7QKjtxdsIphuZEcO-g" target="_blank">Elia Haider's Channel</a></p>
+        </div>
+    </div>
+    
+    <!-- Audio elements -->
+    <audio id="buttonSound" src="sounds/button.mp3"></audio>
+    <audio id="wrongSound" src="sounds/wong.mp3"></audio>
+    <audio id="highScoreSound" src="sounds/high score.mp3"></audio>
+    <audio id="bg1Sound" src="sounds/bg1.mp3" loop></audio>
+    <audio id="bg2Sound" src="sounds/bg2.mp3" loop></audio>
+    <audio id="typeSound" src="sounds/type.mp3"></audio>
+    <audio id="enterSound" src="sounds/enter.mp3"></audio>
+    <audio id="startSound" src="sounds/start.mp3"></audio>
+    
+    <script>
+        const sentence = "The quick brown fox jumps over the lazy dog.";
+        let userInput = "";
+        let startTime, endTime;
+        let mistakes = 0;
+        let mistakeIndices = new Set();
+        let highScore = localStorage.getItem("highScore") ? parseFloat(localStorage.getItem("highScore")) : null;
+        let gameStarted = false;
+        let sentenceCompleted = false;
+        let timerInterval = null;
+        const display = document.getElementById("display");
+        const typingBox = document.getElementById("typingBox");
+        const stats = document.getElementById("stats");
+        const highScoreValue = document.getElementById("highScoreValue");
+        const startButton = document.getElementById("startButton");
+        const restartButton = document.getElementById("restartButton");
+        const statusIndicator = document.getElementById("statusIndicator");
+        const message = document.getElementById("message");
+        const resetIcon = document.getElementById("resetIcon");
+        const homeIcon = document.getElementById("homeIcon");
+        const soundIcon = document.getElementById("soundIcon");
+        const aboutIcon = document.getElementById("aboutIcon");
+        
+        // Audio elements
+        const buttonSound = document.getElementById("buttonSound");
+        const wrongSound = document.getElementById("wrongSound");
+        const highScoreSound = document.getElementById("highScoreSound");
+        const bg1Sound = document.getElementById("bg1Sound");
+        const bg2Sound = document.getElementById("bg2Sound");
+        const typeSound = document.getElementById("typeSound");
+        const enterSound = document.getElementById("enterSound");
+        const startSound = document.getElementById("startSound");
+
+        // Modal elements
+        const soundModal = document.getElementById("soundModal");
+        const soundModalClose = document.getElementById("soundModalClose");
+        const soundOnButton = document.getElementById("soundOnButton");
+        const soundOffButton = document.getElementById("soundOffButton");
+        const resetModal = document.getElementById("resetModal");
+        const resetModalClose = document.getElementById("resetModalClose");
+        const yesButton = document.getElementById("yesButton");
+        const noButton = document.getElementById("noButton");
+        const aboutModal = document.getElementById("aboutModal");
+        const aboutModalClose = document.getElementById("aboutModalClose");
+        const howToPlayHeader = document.getElementById("howToPlayHeader");
+        const aboutGameHeader = document.getElementById("aboutGameHeader");
+        const aboutCreatorHeader = document.getElementById("aboutCreatorHeader");
+        const contactHeader = document.getElementById("contactHeader");
+        const howToPlayContent = document.getElementById("howToPlayContent");
+        const aboutGameContent = document.getElementById("aboutGameContent");
+        const aboutCreatorContent = document.getElementById("aboutCreatorContent");
+        const contactContent = document.getElementById("contactContent");
+
+        let soundEnabled = localStorage.getItem("soundEnabled") !== "false";
+        updateSoundButtons();
+        
+        if (soundEnabled) {
+            bg2Sound.play();
+        }
+
+        function playSound(audio) {
+            if (soundEnabled) {
+                audio.play();
+            }
+        }
+
+        function updateSoundButtons() {
+            soundOnButton.className = "modal-button " + (soundEnabled ? "green" : "grey");
+            soundOffButton.className = "modal-button " + (!soundEnabled ? "green" : "grey");
+        }
+
+        function showAboutSection(contentElement) {
+            howToPlayContent.classList.remove("active");
+            aboutGameContent.classList.remove("active");
+            aboutCreatorContent.classList.remove("active");
+            contactContent.classList.remove("active");
+            contentElement.classList.add("active");
+        }
+
+        function startTimer() {
+            if (timerInterval) {
+                clearInterval(timerInterval);
+            }
+            timerInterval = setInterval(() => {
+                if (gameStarted && startTime) {
+                    const currentTime = (new Date() - startTime) / 1000;
+                    statusIndicator.textContent = currentTime.toFixed(2);
+                }
+            }, 10);
+        }
+
+        function stopTimer() {
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+        }
+
+        function updateDisplay() {
+            display.innerHTML = sentence.split('').map((char, index) => {
+                if (index < userInput.length) {
+                    if (userInput[index] === sentence[index]) {
+                        mistakeIndices.delete(index);
+                        return `<span class="green-text">${char}</span>`;
+                    } else {
+                        mistakeIndices.add(index);
+                        return `<span class="red-text">${char}</span>`;
+                    }
+                }
+                return `<span style="color: white">${char}</span>`;
+            }).join('');
+            typingBox.innerText = userInput;
+        }
+
+        function startGame() {
+            userInput = "";
+            mistakes = 0;
+            mistakeIndices.clear();
+            startTime = null;
+            gameStarted = false;
+            sentenceCompleted = false;
+            statusIndicator.style.background = "linear-gradient(45deg, #ff4444, #ff6666)";
+            statusIndicator.classList.remove("green");
+            statusIndicator.textContent = "0.00";
+            display.style.display = "block";
+            typingBox.style.display = "block";
+            restartButton.style.display = "none";
+            stats.innerHTML = "";
+            message.innerHTML = "";
+            highScoreValue.innerHTML = highScore ? highScore.toFixed(2) + " sec" : "No record yet";
+            if (soundEnabled) {
+                bg2Sound.pause();
+                bg1Sound.play();
+            }
+            updateDisplay();
+        }
+
+        document.addEventListener("keydown", function(event) {
+            if (!gameStarted) {
+                gameStarted = true;
+                statusIndicator.classList.add("green");
+                startTime = new Date();
+                playSound(startSound);
+                startTimer();
+            }
+            
+            if (event.key === "Backspace" && userInput.length > 0) {
+                let removedIndex = userInput.length - 1;
+                userInput = userInput.slice(0, -1);
+                mistakeIndices.delete(removedIndex);
+                playSound(enterSound);
+                updateDisplay();
+                return;
+            }
+            
+            if (event.key.length === 1 && userInput.length < sentence.length) {
+                if (sentence[userInput.length] !== event.key) {
+                    mistakeIndices.add(userInput.length);
+                    playSound(wrongSound);
+                } else {
+                    playSound(typeSound);
+                }
+                userInput += event.key;
+                updateDisplay();
+            }
+            
+            if (userInput.length === sentence.length && event.key === "Enter") {
+                playSound(enterSound);
+                endTime = new Date();
+                let actualTime = (endTime - startTime) / 1000;
+                let penalty = mistakeIndices.size * 0.5;
+                let totalTime = actualTime + penalty;
+
+                stats.innerHTML = `⏱ Time Taken: ${actualTime.toFixed(2)} sec<br>⏰ Penalty: ${penalty.toFixed(2)} sec<br>❌ Mistakes: ${mistakeIndices.size}<br>🎯 Accuracy: ${((sentence.length - mistakeIndices.size) / sentence.length * 100).toFixed(1)}%`;
+                
+                if (((sentence.length - mistakeIndices.size) / sentence.length * 100) >= 90 && (!highScore || totalTime < highScore)) {
+                    localStorage.setItem("highScore", totalTime);
+                    highScore = totalTime;
+                    message.innerHTML = "<span style='color:#00ff00; font-size:24px;'>🏆 High Score Broken! 🏆</span>";
+                    playSound(highScoreSound);
+                    setTimeout(() => { message.innerHTML = ""; }, 3000);
+                }
+
+                highScoreValue.innerHTML = highScore ? highScore.toFixed(2) + " sec" : "No record yet";
+                restartButton.style.display = "block";
+                stopTimer();
+                if (soundEnabled) {
+                    bg1Sound.pause();
+                    bg2Sound.play();
+                }
+            }
+        });
+
+        startButton.addEventListener("click", function() {
+            startButton.style.display = "none";
+            playSound(buttonSound);
+            startGame();
+        });
+
+        restartButton.addEventListener("click", function() {
+            playSound(buttonSound);
+            startGame();
+        });
+
+        // Sound Modal Controls
+        soundIcon.addEventListener("click", function() {
+            playSound(buttonSound);
+            soundModal.style.display = "block";
+        });
+
+        soundModalClose.addEventListener("click", function() {
+            playSound(buttonSound);
+            soundModal.style.display = "none";
+        });
+
+        soundOnButton.addEventListener("click", function() {
+            playSound(buttonSound);
+            soundEnabled = true;
+            localStorage.setItem("soundEnabled", soundEnabled);
+            if (gameStarted) {
+                bg1Sound.play();
+            } else {
+                bg2Sound.play();
+            }
+            updateSoundButtons();
+            soundModal.style.display = "none";
+        });
+
+        soundOffButton.addEventListener("click", function() {
+            playSound(buttonSound);
+            soundEnabled = false;
+            localStorage.setItem("soundEnabled", soundEnabled);
+            bg1Sound.pause();
+            bg2Sound.pause();
+            updateSoundButtons();
+            soundModal.style.display = "none";
+        });
+
+        // Reset Modal Controls
+        resetIcon.addEventListener("click", function() {
+            playSound(buttonSound);
+            resetModal.style.display = "block";
+        });
+
+        resetModalClose.addEventListener("click", function() {
+            playSound(buttonSound);
+            resetModal.style.display = "none";
+        });
+
+        yesButton.addEventListener("click", function() {
+            playSound(buttonSound);
+            localStorage.removeItem("highScore");
+            highScore = null;
+            highScoreValue.innerHTML = "No record yet";
+            resetModal.style.display = "none";
+        });
+
+        noButton.addEventListener("click", function() {
+            playSound(buttonSound);
+            resetModal.style.display = "none";
+        });
+
+        // About Modal Controls
+        aboutIcon.addEventListener("click", function() {
+            playSound(buttonSound);
+            aboutModal.style.display = "block";
+            showAboutSection(howToPlayContent); // Default to "How to Play"
+        });
+
+        aboutModalClose.addEventListener("click", function() {
+            playSound(buttonSound);
+            aboutModal.style.display = "none";
+        });
+
+        howToPlayHeader.addEventListener("click", function() {
+            playSound(buttonSound);
+            showAboutSection(howToPlayContent);
+        });
+
+        aboutGameHeader.addEventListener("click", function() {
+            playSound(buttonSound);
+            showAboutSection(aboutGameContent);
+        });
+
+        aboutCreatorHeader.addEventListener("click", function() {
+            playSound(buttonSound);
+            showAboutSection(aboutCreatorContent);
+        });
+
+        contactHeader.addEventListener("click", function() {
+            playSound(buttonSound);
+            showAboutSection(contactContent);
+        });
+
+        homeIcon.addEventListener("click", function() {
+            playSound(buttonSound);
+            console.log("Home icon clicked");
+            try {
+                window.location.reload(true);
+            } catch (e) {
+                console.error("Reload failed:", e);
+                window.location.href = window.location.href;
+            }
+        });
+    </script>
+</body>
+</html>
