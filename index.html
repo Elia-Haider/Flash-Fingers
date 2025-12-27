@@ -39,6 +39,7 @@
         #gameLogo:hover {
             transform: scale(1.1) rotate(2deg);
         }
+        /* Original Icons - Perfectly back */
         #iconContainer {
             position: absolute;
             top: 20px;
@@ -46,7 +47,7 @@
             display: flex;
             gap: 15px;
         }
-        #homeIcon, #soundIcon, #resetIcon, #aboutIcon {
+        #soundIcon, #resetIcon, #aboutIcon {
             font-size: 28px;
             cursor: pointer;
             color: #ffffff;
@@ -55,7 +56,7 @@
             border-radius: 50%;
             background: rgba(255, 255, 255, 0.1);
         }
-        #homeIcon:hover, #soundIcon:hover, #resetIcon:hover, #aboutIcon:hover {
+        #soundIcon:hover, #resetIcon:hover, #aboutIcon:hover {
             color: #00ffcc;
             transform: scale(1.2);
         }
@@ -63,6 +64,17 @@
             position: absolute;
             top: 20px;
             right: 20px;
+            font-size: 28px;
+            cursor: pointer;
+            color: #ffffff;
+            transition: transform 0.3s, color 0.3s;
+            padding: 8px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+        }
+        #homeIcon:hover {
+            color: #00ffcc;
+            transform: scale(1.2);
         }
         #display {
             font-size: 28px;
@@ -85,10 +97,10 @@
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             max-width: 600px;
         }
-        #startButton, #restartButton {
+        #startButton, #restartButton, #downloadResultBtn {
             padding: 15px 35px;
             font-size: 22px;
-            margin-top: 25px;
+            margin: 15px 10px;
             cursor: pointer;
             border: none;
             border-radius: 25px;
@@ -97,7 +109,7 @@
             transition: transform 0.3s, box-shadow 0.3s;
             box-shadow: 0 4px 15px rgba(76, 175, 80, 0.4);
         }
-        #startButton:hover, #restartButton:hover {
+        #startButton:hover, #restartButton:hover, #downloadResultBtn:hover {
             transform: translateY(-3px);
             box-shadow: 0 6px 20px rgba(76, 175, 80, 0.6);
         }
@@ -163,30 +175,115 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background: rgba(40, 42, 54, 0.95);
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-            width: 350px;
+            background: rgba(40, 42, 54, 0.98);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            width: 90%;
+            max-width: 550px;
+            max-height: 90vh;
+            overflow-y: auto;
             z-index: 1000;
-            backdrop-filter: blur(5px);
+            backdrop-filter: blur(10px);
+            border: 1px solid #00ffcc;
         }
         .modal-header {
-            font-size: 20px;
+            font-size: 28px;
             margin-bottom: 20px;
             color: #00ffcc;
+            text-shadow: 0 0 10px #00ffcc;
+        }
+        #resultText {
+            background: rgba(0,0,0,0.4);
+            padding: 25px;
+            border-radius: 15px;
+            font-size: 17px;
+            line-height: 2;
+            margin: 20px 0;
+            text-align: left;
+            border: 1px dashed #00ffcc;
+            color: #ffffff;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-family: 'Courier New', monospace;
+        }
+        .download-btn {
+            background: linear-gradient(45deg, #0088ff, #00ccff);
+            padding: 15px 30px;
+            font-size: 20px;
+            margin: 10px auto;
+            display: block;
+            box-shadow: 0 4px 15px rgba(0, 136, 255, 0.4);
+            border: none;
+            border-radius: 25px;
             cursor: pointer;
+            color: white;
+            width: 80%;
+            max-width: 300px;
+        }
+        .download-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 136, 255, 0.6);
+        }
+        .copy-btn {
+            background: linear-gradient(45deg, #ff6b6b, #ff8787);
+            padding: 12px 25px;
+            font-size: 18px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            color: white;
+            width: 80%;
+            max-width: 300px;
+            display: block;
+            margin: 10px auto;
+        }
+        .copy-btn:hover {
+            transform: translateY(-2px);
+        }
+        #toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #00ff88;
+            color: black;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-weight: bold;
+            z-index: 2000;
+            display: none;
+            box-shadow: 0 5px 15px rgba(0,255,0,0.3);
         }
         .modal-close {
             position: absolute;
-            top: 10px;
-            right: 10px;
-            font-size: 24px;
+            top: 15px;
+            right: 20px;
+            font-size: 30px;
             color: #ff4444;
             cursor: pointer;
         }
         .modal-close:hover { color: #ff6666; }
-        .modal-buttons { display: flex; justify-content: space-around; }
+        #resultButtons {
+            display: none;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+        .modal-content {
+            display: none;
+            font-size: 16px;
+            text-align: left;
+            color: #ffffff;
+        }
+        .modal-content.active {
+            display: block;
+        }
+        .modal-buttons {
+            display: flex;
+            justify-content: space-around;
+        }
         .modal-button {
             padding: 10px 20px;
             font-size: 18px;
@@ -207,11 +304,9 @@
             background: linear-gradient(45deg, #4caf50, #66bb6a);
             color: white;
         }
-        .modal-button:hover { transform: translateY(-2px); }
-        .modal-content { display: none; font-size: 16px; text-align: left; color: #ffffff; }
-        .modal-content.active { display: block; }
-        .modal-content a { color: #00ffcc; text-decoration: none; }
-        .modal-content a:hover { text-decoration: underline; }
+        .modal-button:hover {
+            transform: translateY(-2px);
+        }
     </style>
 </head>
 <body>
@@ -232,9 +327,24 @@
     <div id="stats"></div>
     <div id="highScore">High Score: <span id="highScoreValue"></span> 🏆</div>
     <div id="message"></div>
-    <button id="restartButton" style="display: none;">Restart</button>
 
-    <!-- Modals -->
+    <div id="resultButtons">
+        <button id="downloadResultBtn">📥 Download Result</button>
+        <button id="restartButton">Restart</button>
+    </div>
+
+    <!-- Result Modal -->
+    <div id="resultModal" class="modal">
+        <span class="modal-close" id="resultModalClose">✖</span>
+        <div class="modal-header">🏆 Your Typing Result</div>
+        <pre id="resultText">Loading...</pre>
+        <button class="download-btn" id="modalDownloadBtn">💾 Download Result</button>
+        <button class="copy-btn" id="copyResultBtn">📋 Copy Result</button>
+    </div>
+
+    <div id="toast">Result copied to clipboard! ✅</div>
+
+    <!-- Original Modals -->
     <div id="soundModal" class="modal">
         <span id="soundModalClose" class="modal-close">✖</span>
         <div class="modal-header">Sound Settings</div>
@@ -318,6 +428,7 @@
         let gameInProgress = false;
         let gameFinished = false;
         let timerInterval = null;
+        let lastResultText = "";
 
         const display = document.getElementById("display");
         const typingBox = document.getElementById("typingBox");
@@ -327,6 +438,8 @@
         const restartButton = document.getElementById("restartButton");
         const statusIndicator = document.getElementById("statusIndicator");
         const message = document.getElementById("message");
+        const resultButtons = document.getElementById("resultButtons");
+        const downloadResultBtn = document.getElementById("downloadResultBtn");
 
         const buttonSound = document.getElementById("buttonSound");
         const wrongSound = document.getElementById("wrongSound");
@@ -361,6 +474,13 @@
         const aboutIcon = document.getElementById("aboutIcon");
         const homeIcon = document.getElementById("homeIcon");
 
+        const resultModal = document.getElementById("resultModal");
+        const resultModalClose = document.getElementById("resultModalClose");
+        const resultText = document.getElementById("resultText");
+        const modalDownloadBtn = document.getElementById("modalDownloadBtn");
+        const copyResultBtn = document.getElementById("copyResultBtn");
+        const toast = document.getElementById("toast");
+
         let soundEnabled = localStorage.getItem("soundEnabled") !== "false";
         if (soundEnabled) bg2Sound.play();
 
@@ -378,7 +498,10 @@
         updateSoundButtons();
 
         function showAboutSection(section) {
-            [howToPlayContent, aboutGameContent, aboutCreatorContent, contactContent].forEach(el => el.classList.remove("active"));
+            howToPlayContent.classList.remove("active");
+            aboutGameContent.classList.remove("active");
+            aboutCreatorContent.classList.remove("active");
+            contactContent.classList.remove("active");
             section.classList.add("active");
         }
 
@@ -405,7 +528,7 @@
                 span.textContent = char === " " ? "\u00A0" : char;
                 display.appendChild(span);
             }
-            typingBox.innerText = userInput;  // Sirf display ke liye
+            typingBox.innerText = userInput;
         }
 
         function prepareGame() {
@@ -424,7 +547,7 @@
             display.style.display = "block";
             typingBox.style.display = "block";
             typingBox.innerText = "";
-            restartButton.style.display = "none";
+            resultButtons.style.display = "none";
             stats.innerHTML = "";
             message.innerHTML = "";
             highScoreValue.innerText = highScore ? highScore.toFixed(2) + " sec" : "No record yet";
@@ -455,6 +578,8 @@
             const netWPM = Math.round((correctChars / 5) / (actualTime / 60)) || 0;
             const accuracy = ((correctChars / currentSentence.length) * 100).toFixed(1);
 
+            lastResultText = `🏆 FLASH FINGERS - TYPING RESULT 🏆\n\n📝 Sentence: "${currentSentence}"\n\n⏱  Time Taken: ${actualTime.toFixed(2)} seconds\n🏃 Raw WPM: ${grossWPM}\n🎯 Adjusted WPM: ${netWPM}\n⏰ Penalty: ${penalty.toFixed(2)} sec (${mistakeIndices.size} mistakes × 0.5s)\n❌ Mistakes: ${mistakeIndices.size}\n🎯 Accuracy: ${accuracy}%\n\n${accuracy >= 90 && (!highScore || totalTime < highScore) ? "🏆 NEW HIGH SCORE BROKEN! 🏆" : "High Score: " + (highScore ? highScore.toFixed(2) + " sec" : "No record yet")}\n\nDeveloped by Elia Haider from Baltistan, Pakistan\nPlay again at: ${window.location.href}`;
+
             stats.innerHTML = `
                 ⏱ Time Taken: ${actualTime.toFixed(2)} sec<br>
                 🏃 Raw WPM: ${grossWPM}<br>
@@ -473,7 +598,8 @@
             }
 
             highScoreValue.innerText = highScore ? highScore.toFixed(2) + " sec" : "No record yet";
-            restartButton.style.display = "block";
+
+            resultButtons.style.display = "flex";
 
             statusIndicator.classList.remove("active", "green");
             clearInterval(timerInterval);
@@ -543,6 +669,38 @@
 
         startButton.addEventListener("click", () => { playSound(buttonSound); prepareGame(); });
         restartButton.addEventListener("click", () => { playSound(buttonSound); prepareGame(); });
+
+        downloadResultBtn.addEventListener("click", () => {
+            resultText.textContent = lastResultText;
+            resultModal.style.display = "block";
+            playSound(buttonSound);
+        });
+
+        resultModalClose.addEventListener("click", () => {
+            resultModal.style.display = "none";
+            playSound(buttonSound);
+        });
+
+        modalDownloadBtn.addEventListener("click", () => {
+            const blob = new Blob([lastResultText], { type: "text/plain" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = "flashfingers_result.txt";
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            playSound(buttonSound);
+        });
+
+        copyResultBtn.addEventListener("click", () => {
+            navigator.clipboard.writeText(lastResultText).then(() => {
+                toast.style.display = "block";
+                setTimeout(() => toast.style.display = "none", 3000);
+                playSound(buttonSound);
+            });
+        });
 
         soundIcon.addEventListener("click", () => { playSound(buttonSound); soundModal.style.display = "block"; });
         soundModalClose.addEventListener("click", () => { playSound(buttonSound); soundModal.style.display = "none"; });
