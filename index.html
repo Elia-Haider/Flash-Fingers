@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Flash Fingers - Typing Game</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" href="logo/LOGO.png" type="image/png">
+    
     <style>
         body {
             font-family: 'Poppins', sans-serif;
@@ -20,10 +24,20 @@
         }
         h1 {
             font-size: 48px;
-            margin-bottom: 30px;
+            margin: 20px 0 30px 0;
             text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
             color: #00ffcc;
             letter-spacing: 2px;
+        }
+        #gameLogo {
+            width: 180px;
+            height: auto;
+            margin-bottom: 10px;
+            filter: drop-shadow(0 0 15px #00ffcc);
+            transition: transform 0.4s ease;
+        }
+        #gameLogo:hover {
+            transform: scale(1.1) rotate(2deg);
         }
         #iconContainer {
             position: absolute;
@@ -207,7 +221,10 @@
         <span id="aboutIcon">ℹ️</span>
     </div>
     <span id="homeIcon">🏠</span>
+
+    <img src="logo/LOGO.png" alt="Flash Fingers Logo" id="gameLogo">
     <h1>Flash Fingers - Typing Game</h1>
+
     <button id="startButton">Start</button>
     <div id="statusIndicator">0.00</div>
     <div id="display" style="display: none;"></div>
@@ -350,7 +367,7 @@
         function playSound(audio) {
             if (soundEnabled) {
                 audio.currentTime = 0;
-                audio.play();
+                audio.play().catch(() => {});
             }
         }
 
@@ -361,10 +378,7 @@
         updateSoundButtons();
 
         function showAboutSection(section) {
-            howToPlayContent.classList.remove("active");
-            aboutGameContent.classList.remove("active");
-            aboutCreatorContent.classList.remove("active");
-            contactContent.classList.remove("active");
+            [howToPlayContent, aboutGameContent, aboutCreatorContent, contactContent].forEach(el => el.classList.remove("active"));
             section.classList.add("active");
         }
 
@@ -381,20 +395,17 @@
                     if (userInput[i] === char) {
                         span.className = "green-text";
                     } else {
-                        if (char === " ") {
-                            span.className = "space-error";
-                        } else {
-                            span.className = "red-text";
-                        }
+                        if (char === " ") span.className = "space-error";
+                        else span.className = "red-text";
                         mistakeIndices.add(i);
                     }
                 } else {
                     span.style.color = "white";
                 }
-                span.textContent = char === " " ? "\u00A0" : char; // non-breaking space
+                span.textContent = char === " " ? "\u00A0" : char;
                 display.appendChild(span);
             }
-            typingBox.innerText = userInput;
+            typingBox.innerText = userInput;  // Sirf display ke liye
         }
 
         function prepareGame() {
@@ -530,7 +541,6 @@
             }
         });
 
-        // ALL BUTTONS FULL WORKING
         startButton.addEventListener("click", () => { playSound(buttonSound); prepareGame(); });
         restartButton.addEventListener("click", () => { playSound(buttonSound); prepareGame(); });
 
