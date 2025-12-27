@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flash Fingers - Typing Game</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            text-align: center;
+            background: linear-gradient(135deg, #1e1e2e, #2a2a3d);
+            color: #ffffff;
+            margin: 0;
+            padding: 40px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        h1 {
+            font-size: 48px;
+            margin-bottom: 30px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            color: #00ffcc;
+            letter-spacing: 2px;
+        }
+        #iconContainer {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            display: flex;
+            gap: 15px;
+        }
+        #homeIcon, #soundIcon, #resetIcon, #aboutIcon {
+            font-size: 28px;
+            cursor: pointer;
+            color: #ffffff;
+            transition: transform 0.3s, color 0.3s;
+            padding: 8px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+        }
+        #homeIcon:hover, #soundIcon:hover, #resetIcon:hover, #aboutIcon:hover {
+            color: #00ffcc;
+            transform: scale(1.2);
+        }
+        #homeIcon {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+        #display {
+            font-size: 28px;
+            margin: 20px 0;
+            background: rgba(40, 42, 54, 0.9);
+            padding: 20px 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            max-width: 700px;
+            backdrop-filter: blur(5px);
+            word-wrap: break-word;
+            line-height: 1.6;
+        }
+        #stats, #highScore, #message {
+            font-size: 20px;
+            margin-top: 25px;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+        }
+        #startButton, #restartButton {
+            padding: 15px 35px;
+            font-size: 22px;
+            margin-top: 25px;
+            cursor: pointer;
+            border: none;
+            border-radius: 25px;
+            background: linear-gradient(45deg, #4caf50, #66bb6a);
+            color: white;
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.4);
+        }
+        #startButton:hover, #restartButton:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.6);
+        }
+        #typingBox {
+            font-size: 26px;
+            margin: 15px auto;
+            padding: 15px;
+            border: 3px solid #00ffcc;
+            width: 500px;
+            height: 60px;
+            text-align: center;
+            background: rgba(51, 51, 51, 0.8);
+            border-radius: 12px;
+            color: #ffffff;
+            box-shadow: 0 0 15px rgba(0, 255, 204, 0.3);
+            transition: border-color 0.3s;
+        }
+        #typingBox:focus {
+            outline: none;
+            border-color: #00ccff;
+        }
+        .green-text { color: #00ff00; text-shadow: 0 0 5px rgba(0,255,0,0.5); }
+        .red-text { color: #ff4444; text-shadow: 0 0 5px rgba(255,68,68,0.5); }
+        .space-error {
+            position: relative;
+            display: inline-block;
+            width: 10px;
+        }
+        .space-error::after {
+            content: "";
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: #ff4444;
+            box-shadow: 0 0 8px rgba(255, 68, 68, 0.8);
+            border-radius: 2px;
+        }
+        #statusIndicator {
+            width: 130px;
+            height: 40px;
+            background: linear-gradient(45deg, #ff4444, #ff6666);
+            margin: 20px auto;
+            border-radius: 20px;
+            line-height: 40px;
+            font-size: 20px;
+            font-weight: bold;
+            box-shadow: 0 2px 10px rgba(255,68,68,0.3);
+            transition: all 0.3s;
+            opacity: 0;
+        }
+        #statusIndicator.active {
+            opacity: 1;
+        }
+        #statusIndicator.green {
+            background: linear-gradient(45deg, #4caf50, #66bb6a);
+            box-shadow: 0 2px 10px rgba(76,175,80,0.3);
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(40, 42, 54, 0.95);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            width: 350px;
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+        .modal-header {
+            font-size: 20px;
+            margin-bottom: 20px;
+            color: #00ffcc;
+            cursor: pointer;
+        }
+        .modal-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 24px;
+            color: #ff4444;
+            cursor: pointer;
+        }
+        .modal-close:hover { color: #ff6666; }
+        .modal-buttons { display: flex; justify-content: space-around; }
+        .modal-button {
+            padding: 10px 20px;
+            font-size: 18px;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            width: 100px;
+        }
+        #soundOnButton.green, #soundOffButton.green {
+            background: linear-gradient(45deg, #4caf50, #66bb6a);
+            color: white;
+        }
+        #soundOnButton.grey, #soundOffButton.grey {
+            background: linear-gradient(45deg, #666, #999);
+            color: white;
+        }
+        #yesButton, #noButton {
+            background: linear-gradient(45deg, #4caf50, #66bb6a);
+            color: white;
+        }
+        .modal-button:hover { transform: translateY(-2px); }
+        .modal-content { display: none; font-size: 16px; text-align: left; color: #ffffff; }
+        .modal-content.active { display: block; }
+        .modal-content a { color: #00ffcc; text-decoration: none; }
+        .modal-content a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <div id="iconContainer">
+        <span id="soundIcon">🔊</span>
+        <span id="resetIcon">⚙️</span>
+        <span id="aboutIcon">ℹ️</span>
+    </div>
+    <span id="homeIcon">🏠</span>
+    <h1>Flash Fingers - Typing Game</h1>
+    <button id="startButton">Start</button>
+    <div id="statusIndicator">0.00</div>
+    <div id="display" style="display: none;"></div>
+    <div id="typingBox" style="display: none;"></div>
+    <div id="stats"></div>
+    <div id="highScore">High Score: <span id="highScoreValue"></span> 🏆</div>
+    <div id="message"></div>
+    <button id="restartButton" style="display: none;">Restart</button>
+
+    <!-- Modals -->
+    <div id="soundModal" class="modal">
+        <span id="soundModalClose" class="modal-close">✖</span>
+        <div class="modal-header">Sound Settings</div>
+        <div class="modal-buttons">
+            <button id="soundOnButton" class="modal-button">ON</button>
+            <button id="soundOffButton" class="modal-button">OFF</button>
+        </div>
+    </div>
+
+    <div id="resetModal" class="modal">
+        <span id="resetModalClose" class="modal-close">✖</span>
+        <div class="modal-header">Do you want to reset high score?</div>
+        <div class="modal-buttons">
+            <button id="yesButton" class="modal-button">Yes</button>
+            <button id="noButton" class="modal-button">No</button>
+        </div>
+    </div>
+
+    <div id="aboutModal" class="modal">
+        <span id="aboutModalClose" class="modal-close">✖</span>
+        <div class="modal-header" id="howToPlayHeader">How to Play</div>
+        <div class="modal-header" id="aboutGameHeader">About Game</div>
+        <div class="modal-header" id="aboutCreatorHeader">About Creator</div>
+        <div class="modal-header" id="contactHeader">Contact Info</div>
+        <div id="howToPlayContent" class="modal-content active">
+            <p>1. Press <strong>Enter</strong> or click "Start" to begin.<br>
+            2. A random sentence will appear — get ready!<br>
+            3. <strong>Timer starts when you type the first letter</strong> (and that letter counts!)<br>
+            4. Type accurately and press Enter to finish.<br>
+            5. See your Time, WPM, Accuracy, and more!<br>
+            6. Press <strong>Enter</strong> again or click Restart for next round.<br>
+            <strong>New:</strong> Multiple sentences + WPM + Space mistake visible!</p>
+        </div>
+        <div id="aboutGameContent" class="modal-content">
+            <p>This game helps improve typing speed and accuracy with random sentences, WPM tracking, and a sleek design.</p>
+        </div>
+        <div id="aboutCreatorContent" class="modal-content">
+            <p>Developed by Elia Haider from Baltistan, Pakistan.</p>
+        </div>
+        <div id="contactContent" class="modal-content">
+            <p>Email: <a href="mailto:haiderhashmi1120@gmail.com">haiderhashmi1120@gmail.com</a><br>
+            YouTube: <a href="https://www.youtube.com/channel/UCAaSY7QKjtxdsIphuZEcO-g" target="_blank">Elia Haider's Channel</a></p>
+        </div>
+    </div>
+
+    <!-- Audio -->
+    <audio id="buttonSound" src="sounds/button.mp3"></audio>
+    <audio id="wrongSound" src="sounds/wong.mp3"></audio>
+    <audio id="highScoreSound" src="sounds/high score.mp3"></audio>
+    <audio id="bg1Sound" src="sounds/bg1.mp3" loop></audio>
+    <audio id="bg2Sound" src="sounds/bg2.mp3" loop></audio>
+    <audio id="typeSound" src="sounds/type.mp3"></audio>
+    <audio id="enterSound" src="sounds/enter.mp3"></audio>
+    <audio id="startSound" src="sounds/start.mp3"></audio>
+
+    <script>
+        const sentences = [
+            "The quick brown fox jumps over the lazy dog.",
+            "Pack my box with five dozen liquor jugs.",
+            "The five boxing wizards jump quickly.",
+            "How vexingly quick daft zebras jump!",
+            "Bright vixens jump; dozy fowl quack.",
+            "Sphinx of black quartz, judge my vow.",
+            "Two driven jocks help fax my big quiz.",
+            "Jinxed wizards pluck ivy from the big quilt.",
+            "Crazy Fredrick bought many very exquisite opal jewels.",
+            "Jived fox nymph grabs quick waltz.",
+            "Glib jocks quiz nymph to vex dwarf.",
+            "Blowzy red vixens fight for a quick jump.",
+            "Joaquin Phoenix was gazed by MTV for luck.",
+            "Waxy and quivering, jocks fumble the pizza.",
+            "The jay, pig, fox, zebra and my wolves quack!"
+        ];
+
+        let currentSentence = "";
+        let userInput = "";
+        let startTime = null;
+        let mistakeIndices = new Set();
+        let highScore = localStorage.getItem("highScore") ? parseFloat(localStorage.getItem("highScore")) : null;
+        let gameReady = false;
+        let gameInProgress = false;
+        let gameFinished = false;
+        let timerInterval = null;
+
+        const display = document.getElementById("display");
+        const typingBox = document.getElementById("typingBox");
+        const stats = document.getElementById("stats");
+        const highScoreValue = document.getElementById("highScoreValue");
+        const startButton = document.getElementById("startButton");
+        const restartButton = document.getElementById("restartButton");
+        const statusIndicator = document.getElementById("statusIndicator");
+        const message = document.getElementById("message");
+
+        const buttonSound = document.getElementById("buttonSound");
+        const wrongSound = document.getElementById("wrongSound");
+        const highScoreSound = document.getElementById("highScoreSound");
+        const bg1Sound = document.getElementById("bg1Sound");
+        const bg2Sound = document.getElementById("bg2Sound");
+        const typeSound = document.getElementById("typeSound");
+        const enterSound = document.getElementById("enterSound");
+        const startSound = document.getElementById("startSound");
+
+        const soundModal = document.getElementById("soundModal");
+        const soundModalClose = document.getElementById("soundModalClose");
+        const soundOnButton = document.getElementById("soundOnButton");
+        const soundOffButton = document.getElementById("soundOffButton");
+        const resetModal = document.getElementById("resetModal");
+        const resetModalClose = document.getElementById("resetModalClose");
+        const yesButton = document.getElementById("yesButton");
+        const noButton = document.getElementById("noButton");
+        const aboutModal = document.getElementById("aboutModal");
+        const aboutModalClose = document.getElementById("aboutModalClose");
+        const howToPlayHeader = document.getElementById("howToPlayHeader");
+        const aboutGameHeader = document.getElementById("aboutGameHeader");
+        const aboutCreatorHeader = document.getElementById("aboutCreatorHeader");
+        const contactHeader = document.getElementById("contactHeader");
+        const howToPlayContent = document.getElementById("howToPlayContent");
+        const aboutGameContent = document.getElementById("aboutGameContent");
+        const aboutCreatorContent = document.getElementById("aboutCreatorContent");
+        const contactContent = document.getElementById("contactContent");
+
+        const soundIcon = document.getElementById("soundIcon");
+        const resetIcon = document.getElementById("resetIcon");
+        const aboutIcon = document.getElementById("aboutIcon");
+        const homeIcon = document.getElementById("homeIcon");
+
+        let soundEnabled = localStorage.getItem("soundEnabled") !== "false";
+        if (soundEnabled) bg2Sound.play();
+
+        function playSound(audio) {
+            if (soundEnabled) {
+                audio.currentTime = 0;
+                audio.play();
+            }
+        }
+
+        function updateSoundButtons() {
+            soundOnButton.className = "modal-button " + (soundEnabled ? "green" : "grey");
+            soundOffButton.className = "modal-button " + (!soundEnabled ? "green" : "grey");
+        }
+        updateSoundButtons();
+
+        function showAboutSection(section) {
+            howToPlayContent.classList.remove("active");
+            aboutGameContent.classList.remove("active");
+            aboutCreatorContent.classList.remove("active");
+            contactContent.classList.remove("active");
+            section.classList.add("active");
+        }
+
+        function getRandomSentence() {
+            return sentences[Math.floor(Math.random() * sentences.length)];
+        }
+
+        function updateDisplay() {
+            display.innerHTML = "";
+            for (let i = 0; i < currentSentence.length; i++) {
+                const char = currentSentence[i];
+                const span = document.createElement("span");
+                if (i < userInput.length) {
+                    if (userInput[i] === char) {
+                        span.className = "green-text";
+                    } else {
+                        if (char === " ") {
+                            span.className = "space-error";
+                        } else {
+                            span.className = "red-text";
+                        }
+                        mistakeIndices.add(i);
+                    }
+                } else {
+                    span.style.color = "white";
+                }
+                span.textContent = char === " " ? "\u00A0" : char; // non-breaking space
+                display.appendChild(span);
+            }
+            typingBox.innerText = userInput;
+        }
+
+        function prepareGame() {
+            currentSentence = getRandomSentence();
+            userInput = "";
+            mistakeIndices.clear();
+            startTime = null;
+            gameReady = true;
+            gameInProgress = false;
+            gameFinished = false;
+
+            statusIndicator.classList.remove("active", "green");
+            statusIndicator.textContent = "0.00";
+
+            updateDisplay();
+            display.style.display = "block";
+            typingBox.style.display = "block";
+            typingBox.innerText = "";
+            restartButton.style.display = "none";
+            stats.innerHTML = "";
+            message.innerHTML = "";
+            highScoreValue.innerText = highScore ? highScore.toFixed(2) + " sec" : "No record yet";
+            startButton.style.display = "none";
+            if (soundEnabled) { bg2Sound.pause(); bg1Sound.play(); }
+            typingBox.focus();
+        }
+
+        function startTimer() {
+            gameInProgress = true;
+            statusIndicator.classList.add("active", "green");
+            startTime = new Date();
+            playSound(startSound);
+            timerInterval = setInterval(() => {
+                const elapsed = (new Date() - startTime) / 1000;
+                statusIndicator.textContent = elapsed.toFixed(2);
+            }, 10);
+        }
+
+        function finishGame() {
+            playSound(enterSound);
+            const endTime = new Date();
+            const actualTime = (endTime - startTime) / 1000;
+            const correctChars = currentSentence.length - mistakeIndices.size;
+            const grossWPM = Math.round((currentSentence.length / 5) / (actualTime / 60)) || 0;
+            const penalty = mistakeIndices.size * 0.5;
+            const totalTime = actualTime + penalty;
+            const netWPM = Math.round((correctChars / 5) / (actualTime / 60)) || 0;
+            const accuracy = ((correctChars / currentSentence.length) * 100).toFixed(1);
+
+            stats.innerHTML = `
+                ⏱ Time Taken: ${actualTime.toFixed(2)} sec<br>
+                🏃 Raw WPM: ${grossWPM}<br>
+                🎯 Adjusted WPM: ${netWPM}<br>
+                ⏰ Penalty: ${penalty.toFixed(2)} sec<br>
+                ❌ Mistakes: ${mistakeIndices.size}<br>
+                🎯 Accuracy: ${accuracy}%
+            `;
+
+            if (accuracy >= 90 && (!highScore || totalTime < highScore)) {
+                highScore = totalTime;
+                localStorage.setItem("highScore", highScore);
+                message.innerHTML = "<span style='color:#00ff00; font-size:24px;'>🏆 High Score Broken! 🏆</span>";
+                playSound(highScoreSound);
+                setTimeout(() => message.innerHTML = "", 3000);
+            }
+
+            highScoreValue.innerText = highScore ? highScore.toFixed(2) + " sec" : "No record yet";
+            restartButton.style.display = "block";
+
+            statusIndicator.classList.remove("active", "green");
+            clearInterval(timerInterval);
+            timerInterval = null;
+
+            if (soundEnabled) { bg1Sound.pause(); bg2Sound.play(); }
+            gameFinished = true;
+            gameInProgress = false;
+            gameReady = false;
+        }
+
+        document.addEventListener("keydown", function(e) {
+            if (startButton.style.display !== "none") {
+                if (e.key === "Enter") {
+                    playSound(buttonSound);
+                    prepareGame();
+                }
+                return;
+            }
+
+            if (gameReady && !gameInProgress && !gameFinished) {
+                if (e.key.length === 1) {
+                    startTimer();
+                    if (e.key !== currentSentence[0]) {
+                        mistakeIndices.add(0);
+                        playSound(wrongSound);
+                    } else {
+                        playSound(typeSound);
+                    }
+                    userInput += e.key;
+                    updateDisplay();
+                }
+                return;
+            }
+
+            if (gameInProgress && !gameFinished) {
+                if (userInput.length === currentSentence.length && e.key === "Enter") {
+                    finishGame();
+                    return;
+                }
+
+                if (e.key === "Backspace" && userInput.length > 0) {
+                    userInput = userInput.slice(0, -1);
+                    mistakeIndices.delete(userInput.length);
+                    playSound(enterSound);
+                    updateDisplay();
+                    return;
+                }
+
+                if (e.key.length === 1 && userInput.length < currentSentence.length) {
+                    if (e.key !== currentSentence[userInput.length]) {
+                        mistakeIndices.add(userInput.length);
+                        playSound(wrongSound);
+                    } else {
+                        playSound(typeSound);
+                    }
+                    userInput += e.key;
+                    updateDisplay();
+                }
+            }
+
+            if (gameFinished && e.key === "Enter") {
+                playSound(buttonSound);
+                prepareGame();
+            }
+        });
+
+        // ALL BUTTONS FULL WORKING
+        startButton.addEventListener("click", () => { playSound(buttonSound); prepareGame(); });
+        restartButton.addEventListener("click", () => { playSound(buttonSound); prepareGame(); });
+
+        soundIcon.addEventListener("click", () => { playSound(buttonSound); soundModal.style.display = "block"; });
+        soundModalClose.addEventListener("click", () => { playSound(buttonSound); soundModal.style.display = "none"; });
+        soundOnButton.addEventListener("click", () => {
+            soundEnabled = true;
+            localStorage.setItem("soundEnabled", "true");
+            updateSoundButtons();
+            soundModal.style.display = "none";
+            playSound(buttonSound);
+            bg2Sound.play();
+        });
+        soundOffButton.addEventListener("click", () => {
+            soundEnabled = false;
+            localStorage.setItem("soundEnabled", "false");
+            bg1Sound.pause();
+            bg2Sound.pause();
+            updateSoundButtons();
+            soundModal.style.display = "none";
+            playSound(buttonSound);
+        });
+
+        resetIcon.addEventListener("click", () => { playSound(buttonSound); resetModal.style.display = "block"; });
+        resetModalClose.addEventListener("click", () => { playSound(buttonSound); resetModal.style.display = "none"; });
+        yesButton.addEventListener("click", () => {
+            localStorage.removeItem("highScore");
+            highScore = null;
+            highScoreValue.innerText = "No record yet";
+            resetModal.style.display = "none";
+            playSound(buttonSound);
+        });
+        noButton.addEventListener("click", () => { resetModal.style.display = "none"; playSound(buttonSound); });
+
+        aboutIcon.addEventListener("click", () => { playSound(buttonSound); aboutModal.style.display = "block"; showAboutSection(howToPlayContent); });
+        aboutModalClose.addEventListener("click", () => { playSound(buttonSound); aboutModal.style.display = "none"; });
+        howToPlayHeader.addEventListener("click", () => { playSound(buttonSound); showAboutSection(howToPlayContent); });
+        aboutGameHeader.addEventListener("click", () => { playSound(buttonSound); showAboutSection(aboutGameContent); });
+        aboutCreatorHeader.addEventListener("click", () => { playSound(buttonSound); showAboutSection(aboutCreatorContent); });
+        contactHeader.addEventListener("click", () => { playSound(buttonSound); showAboutSection(contactContent); });
+
+        homeIcon.addEventListener("click", () => { playSound(buttonSound); location.reload(); });
+    </script>
+</body>
+</html>
