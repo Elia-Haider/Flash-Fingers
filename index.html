@@ -168,7 +168,7 @@
             overflow: hidden;
             box-sizing: border-box;
             display: none;
-            readonly: true;
+            caret-color: #00ffcc;
         }
 
         #typingBox:focus {
@@ -310,7 +310,7 @@
         .download-btn { background: linear-gradient(45deg, #0088ff, #00ccff); box-shadow: 0 4px 15px rgba(0, 136, 255, 0.4); }
         .copy-btn { background: linear-gradient(45deg, #ff6b6b, #ff8787); }
 
-        .download-btn:hover, .copy-btn:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(0, 136, 255, 0.6); }
+        .download-btn:hover, .copy-btn:hover { transform: translateY(-3px); }
 
         #toast {
             position: fixed;
@@ -404,7 +404,7 @@
     <button id="startButton">Start</button>
     <div id="statusIndicator">0.00</div>
     <div id="display"></div>
-    <textarea id="typingBox" readonly></textarea>
+    <textarea id="typingBox"></textarea>
     <div id="stats"></div>
     <div id="highScore">High Score: <span id="highScoreValue"></span> 🏆</div>
     <div id="message"></div>
@@ -715,10 +715,10 @@ Play again at: ${window.location.href}`;
             gameReady = false;
         }
 
-        // Typing Logic - No duplicate letters
+        // Typing Logic - Prevent duplicate + Mobile keyboard
         document.addEventListener("keydown", function(e) {
             if (gameInProgress || gameReady || gameFinished) {
-                e.preventDefault();
+                e.preventDefault(); // Prevent browser from adding character
             }
 
             if (startButton.style.display !== "none" && e.key === "Enter") {
@@ -772,7 +772,15 @@ Play again at: ${window.location.href}`;
             }
         });
 
-        // All Buttons & Modals
+        // Mobile tap to focus
+        typingBox.addEventListener("touchstart", (e) => {
+            typingBox.focus();
+        });
+        typingBox.addEventListener("click", () => {
+            typingBox.focus();
+        });
+
+        // Buttons & Icons
         startButton.addEventListener("click", () => { playSound(buttonSound); prepareGame(); });
         restartButton.addEventListener("click", () => { playSound(buttonSound); prepareGame(); });
 
@@ -842,8 +850,11 @@ Play again at: ${window.location.href}`;
         aboutIcon.addEventListener("click", () => { playSound(buttonSound); aboutModal.style.display = "block"; showAboutSection(howToPlayContent); });
         homeIcon.addEventListener("click", () => { playSound(buttonSound); location.reload(); });
 
-        // Modal Buttons
+        // Modal Close & Buttons
         soundModalClose.addEventListener("click", () => { playSound(buttonSound); soundModal.style.display = "none"; });
+        resetModalClose.addEventListener("click", () => { playSound(buttonSound); resetModal.style.display = "none"; });
+        aboutModalClose.addEventListener("click", () => { playSound(buttonSound); aboutModal.style.display = "none"; });
+
         soundOnButton.addEventListener("click", () => {
             soundEnabled = true;
             localStorage.setItem("soundEnabled", "true");
@@ -852,6 +863,7 @@ Play again at: ${window.location.href}`;
             playSound(buttonSound);
             bg2Sound.play();
         });
+
         soundOffButton.addEventListener("click", () => {
             soundEnabled = false;
             localStorage.setItem("soundEnabled", "false");
@@ -862,7 +874,6 @@ Play again at: ${window.location.href}`;
             playSound(buttonSound);
         });
 
-        resetModalClose.addEventListener("click", () => { playSound(buttonSound); resetModal.style.display = "none"; });
         yesButton.addEventListener("click", () => {
             localStorage.removeItem("highScore");
             highScore = null;
@@ -870,9 +881,12 @@ Play again at: ${window.location.href}`;
             resetModal.style.display = "none";
             playSound(buttonSound);
         });
-        noButton.addEventListener("click", () => { resetModal.style.display = "none"; playSound(buttonSound); });
 
-        aboutModalClose.addEventListener("click", () => { playSound(buttonSound); aboutModal.style.display = "none"; });
+        noButton.addEventListener("click", () => {
+            resetModal.style.display = "none";
+            playSound(buttonSound);
+        });
+
         howToPlayHeader.addEventListener("click", () => { playSound(buttonSound); showAboutSection(howToPlayContent); });
         aboutGameHeader.addEventListener("click", () => { playSound(buttonSound); showAboutSection(aboutGameContent); });
         aboutCreatorHeader.addEventListener("click", () => { playSound(buttonSound); showAboutSection(aboutCreatorContent); });
