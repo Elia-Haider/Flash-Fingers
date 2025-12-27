@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Flash Fingers - Typing Game</title>
     
     <!-- Favicon -->
@@ -23,6 +23,7 @@
             justify-content: flex-start;
             box-sizing: border-box;
             position: relative;
+            overflow-x: hidden;
         }
 
         h1 {
@@ -169,7 +170,6 @@
             box-sizing: border-box;
             display: none;
             caret-color: #00ffcc;
-            readonly: true; /* Prevents double input */
         }
 
         #typingBox:focus {
@@ -405,7 +405,7 @@
     <button id="startButton">Start</button>
     <div id="statusIndicator">0.00</div>
     <div id="display"></div>
-    <textarea id="typingBox" readonly></textarea>
+    <textarea id="typingBox"></textarea>
     <div id="stats"></div>
     <div id="highScore">High Score: <span id="highScoreValue"></span> 🏆</div>
     <div id="message"></div>
@@ -705,7 +705,7 @@ Play again at: ${window.location.href}`;
             highScoreValue.innerText = highScore ? highScore.toFixed(2) + " sec" : "No record yet";
 
             resultButtons.style.display = "flex";
-            typingBox.style.display = "none"; // Hide typing box after result
+            typingBox.style.display = "none"; // Hide typing box on result
 
             statusIndicator.classList.remove("active", "green");
             clearInterval(timerInterval);
@@ -717,9 +717,11 @@ Play again at: ${window.location.href}`;
             gameReady = false;
         }
 
-        // Keydown Logic - No double typing
+        // Keydown Logic - Works on both PC and Mobile
         document.addEventListener("keydown", function(e) {
-            e.preventDefault(); // Stops browser from adding character
+            if (gameInProgress || gameReady || gameFinished) {
+                e.preventDefault(); // Prevent default to avoid double input on mobile
+            }
 
             if (startButton.style.display !== "none" && e.key === "Enter") {
                 playSound(buttonSound);
@@ -772,9 +774,16 @@ Play again at: ${window.location.href}`;
             }
         });
 
-        // Mobile tap to open keyboard
-        typingBox.addEventListener("touchstart", () => typingBox.focus());
-        typingBox.addEventListener("click", () => typingBox.focus());
+        // Mobile touch to open keyboard
+        typingBox.addEventListener("touchstart", (e) => {
+            e.preventDefault();
+            typingBox.focus();
+        });
+
+        typingBox.addEventListener("click", (e) => {
+            e.preventDefault();
+            typingBox.focus();
+        });
 
         // Buttons & Icons
         startButton.addEventListener("click", () => { playSound(buttonSound); prepareGame(); });
