@@ -231,13 +231,21 @@
             border-radius: 25px;
             background: linear-gradient(45deg, #4caf50, #66bb6a);
             color: white;
-            transition: transform 0.3s, box-shadow 0.3s;
+            transition: transform 0.3s, box-shadow 0.3s, opacity 0.5s; /* Added opacity transition */
             box-shadow: 0 4px 15px rgba(76, 175, 80, 0.4);
         }
 
         #startButton:hover, #restartButton:hover, #downloadResultBtn:hover {
             transform: translateY(-3px);
             box-shadow: 0 6px 20px rgba(76, 175, 80, 0.6);
+        }
+
+        /* --- NEW: Style for the disabled restart button --- */
+        #restartButton:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none; /* Prevent hover effect when disabled */
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.4); /* Keep shadow consistent */
         }
 
         #resultButtons {
@@ -389,7 +397,7 @@
     </style>
 </head>
 <body>
-    <!-- HTML is restored to your original version -->
+    <!-- HTML is the same -->
     <div id="mobileMenuBtn">☰</div>
     <div id="mobileMenu">
         <span id="mobileSoundIcon">🔊</span>
@@ -408,10 +416,8 @@
     <button id="startButton">Start</button>
     <div id="statusIndicator">0.00</div>
     
-    <!-- Game Container for positioning -->
     <div id="gameContainer">
         <div id="display"></div>
-        <!-- MOBILE FIX: Textarea is no longer readonly and has attributes to improve mobile experience -->
         <textarea id="typingBox" autocorrect="off" autocapitalize="off" spellcheck="false"></textarea>
     </div>
 
@@ -430,11 +436,14 @@
     <audio id="buttonSound" src="sounds/button.mp3"></audio><audio id="wrongSound" src="sounds/wong.mp3"></audio><audio id="highScoreSound" src="sounds/high score.mp3"></audio><audio id="bg1Sound" src="sounds/bg1.mp3" loop></audio><audio id="bg2Sound" src="sounds/bg2.mp3" loop></audio><audio id="typeSound" src="sounds/type.mp3"></audio><audio id="enterSound" src="sounds/enter.mp3"></audio><audio id="startSound" src="sounds/start.mp3"></audio>
 
     <script>
-        // --- Your original, working script logic is restored ---
         const sentences = ["The quick brown fox jumps over the lazy dog.", "Pack my box with five dozen liquor jugs.", "The five boxing wizards jump quickly.", "How vexingly quick daft zebras jump!", "Bright vixens jump; dozy fowl quack.", "Sphinx of black quartz, judge my vow.", "Two driven jocks help fax my big quiz.", "Jinxed wizards pluck ivy from the big quilt.", "Crazy Fredrick bought many very exquisite opal jewels.", "Jived fox nymph grabs quick waltz.", "Glib jocks quiz nymph to vex dwarf.", "Blowzy red vixens fight for a quick jump.", "Joaquin Phoenix was gazed by MTV for luck.", "Waxy and quivering, jocks fumble the pizza.", "The jay, pig, fox, zebra and my wolves quack!"];
         
-        // --- All variables are the same as your original code ---
+        // --- All variables ---
         let currentSentence = "", userInput = "", startTime = null, mistakeIndices = new Set(), highScore = localStorage.getItem("highScore") ? parseFloat(localStorage.getItem("highScore")) : null, gameReady = false, gameInProgress = false, gameFinished = false, timerInterval = null, lastResultText = "";
+        
+        // --- NEW: Variable to control restart capability ---
+        let canRestart = true;
+
         const display = document.getElementById("display"), typingBox = document.getElementById("typingBox"), stats = document.getElementById("stats"), highScoreValue = document.getElementById("highScoreValue"), startButton = document.getElementById("startButton"), restartButton = document.getElementById("restartButton"), statusIndicator = document.getElementById("statusIndicator"), message = document.getElementById("message"), resultButtons = document.getElementById("resultButtons"), downloadResultBtn = document.getElementById("downloadResultBtn"), buttonSound = document.getElementById("buttonSound"), wrongSound = document.getElementById("wrongSound"), highScoreSound = document.getElementById("highScoreSound"), bg1Sound = document.getElementById("bg1Sound"), bg2Sound = document.getElementById("bg2Sound"), typeSound = document.getElementById("typeSound"), enterSound = document.getElementById("enterSound"), startSound = document.getElementById("startSound"), soundModal = document.getElementById("soundModal"), soundModalClose = document.getElementById("soundModalClose"), soundOnButton = document.getElementById("soundOnButton"), soundOffButton = document.getElementById("soundOffButton"), resetModal = document.getElementById("resetModal"), resetModalClose = document.getElementById("resetModalClose"), yesButton = document.getElementById("yesButton"), noButton = document.getElementById("noButton"), aboutModal = document.getElementById("aboutModal"), aboutModalClose = document.getElementById("aboutModalClose"), howToPlayHeader = document.getElementById("howToPlayHeader"), aboutGameHeader = document.getElementById("aboutGameHeader"), aboutCreatorHeader = document.getElementById("aboutCreatorHeader"), contactHeader = document.getElementById("contactHeader"), howToPlayContent = document.getElementById("howToPlayContent"), aboutGameContent = document.getElementById("aboutGameContent"), aboutCreatorContent = document.getElementById("aboutCreatorContent"), contactContent = document.getElementById("contactContent"), soundIcon = document.getElementById("soundIcon"), resetIcon = document.getElementById("resetIcon"), aboutIcon = document.getElementById("aboutIcon"), homeIcon = document.getElementById("homeIcon"), mobileMenuBtn = document.getElementById("mobileMenuBtn"), mobileMenu = document.getElementById("mobileMenu"), mobileSoundIcon = document.getElementById("mobileSoundIcon"), mobileResetIcon = document.getElementById("mobileResetIcon"), mobileAboutIcon = document.getElementById("mobileAboutIcon"), mobileHomeIcon = document.getElementById("mobileHomeIcon"), resultModal = document.getElementById("resultModal"), resultModalClose = document.getElementById("resultModalClose"), resultText = document.getElementById("resultText"), modalDownloadBtn = document.getElementById("modalDownloadBtn"), copyResultBtn = document.getElementById("copyResultBtn"), toast = document.getElementById("toast");
         let soundEnabled = localStorage.getItem("soundEnabled") !== "false";
         if (soundEnabled) bg2Sound.play();
@@ -462,7 +471,6 @@
                 display.appendChild(span);
             }
 
-            // --- NEW: AUTO-SCROLL LOGIC ---
             const currentSpan = display.children[userInput.length];
             if (currentSpan) {
                 currentSpan.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
@@ -470,6 +478,7 @@
         }
 
         function prepareGame() {
+            canRestart = true; // Make sure restart is enabled when a new game is prepared
             currentSentence = sentences[Math.floor(Math.random() * sentences.length)];
             userInput = ""; mistakeIndices.clear(); startTime = null;
             gameReady = true; gameInProgress = false; gameFinished = false;
@@ -477,12 +486,13 @@
             updateDisplay();
             display.style.display = "block";
             resultButtons.style.display = "none";
+            restartButton.disabled = false; // Ensure button is enabled
             stats.innerHTML = ""; message.innerHTML = "";
             highScoreValue.innerText = highScore ? highScore.toFixed(2) + " sec" : "No record yet";
             startButton.style.display = "none";
             if (soundEnabled) { bg2Sound.pause(); bg1Sound.play(); }
-            typingBox.value = ""; // Clear the textarea
-            typingBox.focus(); // Focus the invisible textarea to bring up mobile keyboard
+            typingBox.value = ""; 
+            typingBox.focus(); 
         }
 
         function startTimer() {
@@ -499,7 +509,6 @@
         }
 
         function finishGame() {
-            // This needs to be called when the game is finished based on the textarea input length
             if (!gameInProgress) return;
 
             playSound(enterSound);
@@ -529,49 +538,63 @@
             clearInterval(timerInterval);
             timerInterval = null;
             if (soundEnabled) { bg1Sound.pause(); bg2Sound.play(); }
+
             gameFinished = true;
             gameInProgress = false;
             gameReady = false;
+
+            // --- NEW: Disable restart functionality for 3 seconds ---
+            canRestart = false;
+            restartButton.disabled = true; // Visually disable the button
+
+            setTimeout(() => {
+                canRestart = true;
+                restartButton.disabled = false; // Re-enable after 3 seconds
+            }, 3000);
         }
         
-        // --- UPDATED: Input handling directly from the textarea ---
         typingBox.addEventListener("input", (e) => {
             if (gameFinished) return;
-
-            // Start timer on the very first input
             if (!gameInProgress && gameReady) {
                 startTimer();
             }
-
             userInput = typingBox.value;
             updateDisplay();
 
-            // Play sound based on correctness
             const typedChar = userInput[userInput.length - 1];
             const targetChar = currentSentence[userInput.length - 1];
             if (typedChar) {
                 playSound(typedChar !== targetChar ? wrongSound : typeSound);
             }
 
-            // Check if game is finished
             if (userInput.length === currentSentence.length) {
                 finishGame();
             }
         });
 
-        // Event listener for restarting with the Enter key
         document.addEventListener("keydown", function(e) {
             if (startButton.style.display !== "none" && e.key === "Enter") {
                 e.preventDefault(); playSound(buttonSound); prepareGame();
             }
+            
+            // --- UPDATED: Check 'canRestart' flag before restarting with Enter key ---
             if (gameFinished && e.key === "Enter") {
-                e.preventDefault(); playSound(buttonSound); prepareGame();
+                if (!canRestart) return; // If restart is not allowed, do nothing
+                e.preventDefault();
+                playSound(buttonSound);
+                prepareGame();
             }
         });
 
-        // --- All your original button event listeners are restored ---
+        // --- UPDATED: Check 'canRestart' flag on button click ---
+        restartButton.addEventListener("click", () => {
+            if (!canRestart) return; // If restart is not allowed, do nothing
+            playSound(buttonSound);
+            prepareGame();
+        });
+
+        // --- Other button listeners (unchanged) ---
         startButton.addEventListener("click", () => { playSound(buttonSound); prepareGame(); });
-        restartButton.addEventListener("click", () => { playSound(buttonSound); prepareGame(); });
         downloadResultBtn.addEventListener("click", () => { resultText.textContent = lastResultText; resultModal.style.display = "block"; playSound(buttonSound); });
         resultModalClose.addEventListener("click", () => { resultModal.style.display = "none"; playSound(buttonSound); });
         modalDownloadBtn.addEventListener("click", () => { const blob = new Blob([lastResultText], { type: "text/plain" }); const url = URL.createObjectURL(blob); const a = document.createElement("a"); a.href = url; a.download = "flashfingers_result.txt"; a.click(); URL.revokeObjectURL(url); playSound(buttonSound); });
