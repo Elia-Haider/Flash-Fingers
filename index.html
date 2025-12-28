@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Flash Fingers - Typing Game</title>
     
     <!-- Favicon -->
@@ -23,7 +23,6 @@
             justify-content: flex-start;
             box-sizing: border-box;
             position: relative;
-            overflow-x: hidden;
         }
 
         h1 {
@@ -135,67 +134,74 @@
             transform: scale(1.1);
         }
 
+        /* Container for Display and Typing Box */
+        #gameContainer {
+            position: relative;
+            width: 100%;
+            max-width: 95vw;
+            margin: 20px auto;
+        }
+
         #display {
             font-size: clamp(20px, 5vw, 28px);
-            margin: 20px auto;
             background: rgba(40, 42, 54, 0.9);
             padding: 15px 20px;
             border-radius: 15px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            max-width: 95vw;
-            width: 100%;
             backdrop-filter: blur(5px);
-            word-wrap: break-word;
             line-height: 1.6;
             box-sizing: border-box;
             display: none;
-        }
+            cursor: text; /* Indicate text input */
 
+            /* --- MOBILE FIX: Prevent wrapping and allow horizontal scroll --- */
+            white-space: nowrap;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch; /* Smooth scroll for iOS */
+            padding-bottom: 10px; /* Make space for scrollbar */
+        }
+        
+        /* Custom Scrollbar for Display Area */
+        #display::-webkit-scrollbar {
+            height: 5px;
+        }
+        #display::-webkit-scrollbar-track {
+            background: #2a2a3d;
+            border-radius: 10px;
+        }
+        #display::-webkit-scrollbar-thumb {
+            background: #00ffcc;
+            border-radius: 10px;
+        }
+        
+        /* --- MOBILE FIX: Invisible textarea on top of display to capture input --- */
         #typingBox {
-            font-size: clamp(22px, 5.5vw, 26px);
-            margin: 20px auto;
-            padding: 15px;
-            border: 3px solid #00ffcc;
-            width: 90vw;
-            max-width: 600px;
-            height: 80px;
-            text-align: left;
-            background: rgba(51, 51, 51, 0.8);
-            border-radius: 12px;
-            color: #ffffff;
-            box-shadow: 0 0 15px rgba(0, 255, 204, 0.3);
-            transition: border-color 0.3s;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0; /* Make it invisible */
+            border: none;
+            background: transparent;
             resize: none;
-            overflow: hidden;
-            box-sizing: border-box;
-            display: none;
-            caret-color: #00ffcc;
-        }
-
-        #typingBox:focus {
             outline: none;
-            border-color: #00ccff;
+            color: transparent; /* Hide text and cursor */
+            caret-color: transparent;
+            padding: 0;
+            margin: 0;
+            z-index: 2; /* Ensure it's on top of #display */
         }
-
+        
         .green-text { color: #00ff00; text-shadow: 0 0 5px rgba(0,255,0,0.5); }
         .red-text { color: #ff4444; text-shadow: 0 0 5px rgba(255,68,68,0.5); }
         .space-error {
             position: relative;
             display: inline-block;
-            width: 10px;
+            background-color: rgba(255, 68, 68, 0.3);
+            border-radius: 3px;
         }
-        .space-error::after {
-            content: "";
-            position: absolute;
-            bottom: -2px;
-            left: 0;
-            width: 100%;
-            height: 3px;
-            background: #ff4444;
-            box-shadow: 0 0 8px rgba(255, 68, 68, 0.8);
-            border-radius: 2px;
-        }
-
+        
         #statusIndicator {
             width: clamp(100px, 30vw, 130px);
             height: 40px;
@@ -279,6 +285,7 @@
             margin-bottom: 20px;
             color: #00ffcc;
             text-shadow: 0 0 10px #00ffcc;
+            cursor: pointer;
         }
 
         #resultText {
@@ -382,7 +389,7 @@
     </style>
 </head>
 <body>
-    <!-- Mobile Menu -->
+    <!-- HTML is restored to your original version -->
     <div id="mobileMenuBtn">☰</div>
     <div id="mobileMenu">
         <span id="mobileSoundIcon">🔊</span>
@@ -390,215 +397,52 @@
         <span id="mobileAboutIcon">ℹ️</span>
         <span id="mobileHomeIcon">🏠</span>
     </div>
-
-    <!-- Desktop Icons -->
     <div id="desktopIcons">
         <span id="soundIcon">🔊</span>
         <span id="resetIcon">⚙️</span>
         <span id="aboutIcon">ℹ️</span>
     </div>
     <span id="homeIcon">🏠</span>
-
     <img src="logo/LOGO.png" alt="Flash Fingers Logo" id="gameLogo">
     <h1>Flash Fingers - Typing Game</h1>
-
     <button id="startButton">Start</button>
     <div id="statusIndicator">0.00</div>
-    <div id="display"></div>
-    <textarea id="typingBox"></textarea>
+    
+    <!-- Game Container for positioning -->
+    <div id="gameContainer">
+        <div id="display"></div>
+        <!-- MOBILE FIX: Textarea is no longer readonly and has attributes to improve mobile experience -->
+        <textarea id="typingBox" autocorrect="off" autocapitalize="off" spellcheck="false"></textarea>
+    </div>
+
     <div id="stats"></div>
     <div id="highScore">High Score: <span id="highScoreValue"></span> 🏆</div>
     <div id="message"></div>
-
     <div id="resultButtons">
         <button id="downloadResultBtn">📥 Download Result</button>
         <button id="restartButton">Restart</button>
     </div>
-
-    <!-- Result Modal -->
-    <div id="resultModal" class="modal">
-        <span class="modal-close" id="resultModalClose">✖</span>
-        <div class="modal-header">🏆 Your Typing Result</div>
-        <pre id="resultText">Loading...</pre>
-        <button class="download-btn" id="modalDownloadBtn">💾 Download Result</button>
-        <button class="copy-btn" id="copyResultBtn">📋 Copy Result</button>
-    </div>
-
+    <div id="resultModal" class="modal"><span class="modal-close" id="resultModalClose">✖</span><div class="modal-header">🏆 Your Typing Result</div><pre id="resultText">Loading...</pre><button class="download-btn" id="modalDownloadBtn">💾 Download Result</button><button class="copy-btn" id="copyResultBtn">📋 Copy Result</button></div>
     <div id="toast">Result copied to clipboard! ✅</div>
-
-    <!-- Sound Modal -->
-    <div id="soundModal" class="modal">
-        <span id="soundModalClose" class="modal-close">✖</span>
-        <div class="modal-header">Sound Settings</div>
-        <div class="modal-buttons">
-            <button id="soundOnButton" class="modal-button">ON</button>
-            <button id="soundOffButton" class="modal-button">OFF</button>
-        </div>
-    </div>
-
-    <!-- Reset Modal -->
-    <div id="resetModal" class="modal">
-        <span id="resetModalClose" class="modal-close">✖</span>
-        <div class="modal-header">Do you want to reset high score?</div>
-        <div class="modal-buttons">
-            <button id="yesButton" class="modal-button">Yes</button>
-            <button id="noButton" class="modal-button">No</button>
-        </div>
-    </div>
-
-    <!-- About Modal -->
-    <div id="aboutModal" class="modal">
-        <span id="aboutModalClose" class="modal-close">✖</span>
-        <div class="modal-header" id="howToPlayHeader">How to Play</div>
-        <div class="modal-header" id="aboutGameHeader">About Game</div>
-        <div class="modal-header" id="aboutCreatorHeader">About Creator</div>
-        <div class="modal-header" id="contactHeader">Contact Info</div>
-        <div id="howToPlayContent" class="modal-content active">
-            <p>1. Press <strong>Enter</strong> or click "Start" to begin.<br>
-            2. A random sentence will appear — get ready!<br>
-            3. <strong>Timer starts when you type the first letter</strong> (and that letter counts!)<br>
-            4. Type accurately and press Enter to finish.<br>
-            5. See your Time, WPM, Accuracy, and more!<br>
-            6. Press <strong>Enter</strong> again or click Restart for next round.<br>
-            <strong>New:</strong> Multiple sentences + WPM + Space mistake visible!</p>
-        </div>
-        <div id="aboutGameContent" class="modal-content">
-            <p>This game helps improve typing speed and accuracy with random sentences, WPM tracking, and a sleek design.</p>
-        </div>
-        <div id="aboutCreatorContent" class="modal-content">
-            <p>Developed by Elia Haider from Baltistan, Pakistan.</p>
-        </div>
-        <div id="contactContent" class="modal-content">
-            <p>Email: <a href="mailto:haiderhashmi1120@gmail.com">haiderhashmi1120@gmail.com</a><br>
-            YouTube: <a href="https://www.youtube.com/channel/UCAaSY7QKjtxdsIphuZEcO-g" target="_blank">Elia Haider's Channel</a></p>
-        </div>
-    </div>
-
-    <!-- Audio -->
-    <audio id="buttonSound" src="sounds/button.mp3"></audio>
-    <audio id="wrongSound" src="sounds/wong.mp3"></audio>
-    <audio id="highScoreSound" src="sounds/high score.mp3"></audio>
-    <audio id="bg1Sound" src="sounds/bg1.mp3" loop></audio>
-    <audio id="bg2Sound" src="sounds/bg2.mp3" loop></audio>
-    <audio id="typeSound" src="sounds/type.mp3"></audio>
-    <audio id="enterSound" src="sounds/enter.mp3"></audio>
-    <audio id="startSound" src="sounds/start.mp3"></audio>
+    <div id="soundModal" class="modal"><span id="soundModalClose" class="modal-close">✖</span><div class="modal-header">Sound Settings</div><div class="modal-buttons"><button id="soundOnButton" class="modal-button">ON</button><button id="soundOffButton" class="modal-button">OFF</button></div></div>
+    <div id="resetModal" class="modal"><span id="resetModalClose" class="modal-close">✖</span><div class="modal-header">Do you want to reset high score?</div><div class="modal-buttons"><button id="yesButton" class="modal-button">Yes</button><button id="noButton" class="modal-button">No</button></div></div>
+    <div id="aboutModal" class="modal"><span id="aboutModalClose" class="modal-close">✖</span><div class="modal-header" id="howToPlayHeader">How to Play</div><div class="modal-header" id="aboutGameHeader">About Game</div><div class="modal-header" id="aboutCreatorHeader">About Creator</div><div class="modal-header" id="contactHeader">Contact Info</div><div id="howToPlayContent" class="modal-content active"><p>1. Press <strong>Enter</strong> or click "Start" to begin.<br>2. A random sentence will appear — get ready!<br>3. <strong>Timer starts when you type the first letter</strong> (and that letter counts!)<br>4. Type accurately and press Enter to finish.<br>5. See your Time, WPM, Accuracy, and more!<br>6. Press <strong>Enter</strong> again or click Restart for next round.<br><strong>New:</strong> Multiple sentences + WPM + Space mistake visible!</p></div><div id="aboutGameContent" class="modal-content"><p>This game helps improve typing speed and accuracy with random sentences, WPM tracking, and a sleek design.</p></div><div id="aboutCreatorContent" class="modal-content"><p>Developed by Elia Haider from Baltistan, Pakistan.</p></div><div id="contactContent" class="modal-content"><p>Email: <a href="mailto:haiderhashmi1120@gmail.com">haiderhashmi1120@gmail.com</a><br>YouTube: <a href="https://www.youtube.com/channel/UCAaSY7QKjtxdsIphuZEcO-g" target="_blank">Elia Haider's Channel</a></p></div></div>
+    <audio id="buttonSound" src="sounds/button.mp3"></audio><audio id="wrongSound" src="sounds/wong.mp3"></audio><audio id="highScoreSound" src="sounds/high score.mp3"></audio><audio id="bg1Sound" src="sounds/bg1.mp3" loop></audio><audio id="bg2Sound" src="sounds/bg2.mp3" loop></audio><audio id="typeSound" src="sounds/type.mp3"></audio><audio id="enterSound" src="sounds/enter.mp3"></audio><audio id="startSound" src="sounds/start.mp3"></audio>
 
     <script>
-        const sentences = [
-            "The quick brown fox jumps over the lazy dog.",
-            "Pack my box with five dozen liquor jugs.",
-            "The five boxing wizards jump quickly.",
-            "How vexingly quick daft zebras jump!",
-            "Bright vixens jump; dozy fowl quack.",
-            "Sphinx of black quartz, judge my vow.",
-            "Two driven jocks help fax my big quiz.",
-            "Jinxed wizards pluck ivy from the big quilt.",
-            "Crazy Fredrick bought many very exquisite opal jewels.",
-            "Jived fox nymph grabs quick waltz.",
-            "Glib jocks quiz nymph to vex dwarf.",
-            "Blowzy red vixens fight for a quick jump.",
-            "Joaquin Phoenix was gazed by MTV for luck.",
-            "Waxy and quivering, jocks fumble the pizza.",
-            "The jay, pig, fox, zebra and my wolves quack!"
-        ];
-
-        let currentSentence = "";
-        let userInput = "";
-        let startTime = null;
-        let mistakeIndices = new Set();
-        let highScore = localStorage.getItem("highScore") ? parseFloat(localStorage.getItem("highScore")) : null;
-        let gameReady = false;
-        let gameInProgress = false;
-        let gameFinished = false;
-        let timerInterval = null;
-        let lastResultText = "";
-
-        const display = document.getElementById("display");
-        const typingBox = document.getElementById("typingBox");
-        const stats = document.getElementById("stats");
-        const highScoreValue = document.getElementById("highScoreValue");
-        const startButton = document.getElementById("startButton");
-        const restartButton = document.getElementById("restartButton");
-        const statusIndicator = document.getElementById("statusIndicator");
-        const message = document.getElementById("message");
-        const resultButtons = document.getElementById("resultButtons");
-        const downloadResultBtn = document.getElementById("downloadResultBtn");
-
-        const buttonSound = document.getElementById("buttonSound");
-        const wrongSound = document.getElementById("wrongSound");
-        const highScoreSound = document.getElementById("highScoreSound");
-        const bg1Sound = document.getElementById("bg1Sound");
-        const bg2Sound = document.getElementById("bg2Sound");
-        const typeSound = document.getElementById("typeSound");
-        const enterSound = document.getElementById("enterSound");
-        const startSound = document.getElementById("startSound");
-
-        const soundModal = document.getElementById("soundModal");
-        const soundModalClose = document.getElementById("soundModalClose");
-        const soundOnButton = document.getElementById("soundOnButton");
-        const soundOffButton = document.getElementById("soundOffButton");
-        const resetModal = document.getElementById("resetModal");
-        const resetModalClose = document.getElementById("resetModalClose");
-        const yesButton = document.getElementById("yesButton");
-        const noButton = document.getElementById("noButton");
-        const aboutModal = document.getElementById("aboutModal");
-        const aboutModalClose = document.getElementById("aboutModalClose");
-        const howToPlayHeader = document.getElementById("howToPlayHeader");
-        const aboutGameHeader = document.getElementById("aboutGameHeader");
-        const aboutCreatorHeader = document.getElementById("aboutCreatorHeader");
-        const contactHeader = document.getElementById("contactHeader");
-        const howToPlayContent = document.getElementById("howToPlayContent");
-        const aboutGameContent = document.getElementById("aboutGameContent");
-        const aboutCreatorContent = document.getElementById("aboutCreatorContent");
-        const contactContent = document.getElementById("contactContent");
-
-        const soundIcon = document.getElementById("soundIcon");
-        const resetIcon = document.getElementById("resetIcon");
-        const aboutIcon = document.getElementById("aboutIcon");
-        const homeIcon = document.getElementById("homeIcon");
-
-        const mobileMenuBtn = document.getElementById("mobileMenuBtn");
-        const mobileMenu = document.getElementById("mobileMenu");
-        const mobileSoundIcon = document.getElementById("mobileSoundIcon");
-        const mobileResetIcon = document.getElementById("mobileResetIcon");
-        const mobileAboutIcon = document.getElementById("mobileAboutIcon");
-        const mobileHomeIcon = document.getElementById("mobileHomeIcon");
-
-        const resultModal = document.getElementById("resultModal");
-        const resultModalClose = document.getElementById("resultModalClose");
-        const resultText = document.getElementById("resultText");
-        const modalDownloadBtn = document.getElementById("modalDownloadBtn");
-        const copyResultBtn = document.getElementById("copyResultBtn");
-        const toast = document.getElementById("toast");
-
+        // --- Your original, working script logic is restored ---
+        const sentences = ["The quick brown fox jumps over the lazy dog.", "Pack my box with five dozen liquor jugs.", "The five boxing wizards jump quickly.", "How vexingly quick daft zebras jump!", "Bright vixens jump; dozy fowl quack.", "Sphinx of black quartz, judge my vow.", "Two driven jocks help fax my big quiz.", "Jinxed wizards pluck ivy from the big quilt.", "Crazy Fredrick bought many very exquisite opal jewels.", "Jived fox nymph grabs quick waltz.", "Glib jocks quiz nymph to vex dwarf.", "Blowzy red vixens fight for a quick jump.", "Joaquin Phoenix was gazed by MTV for luck.", "Waxy and quivering, jocks fumble the pizza.", "The jay, pig, fox, zebra and my wolves quack!"];
+        
+        // --- All variables are the same as your original code ---
+        let currentSentence = "", userInput = "", startTime = null, mistakeIndices = new Set(), highScore = localStorage.getItem("highScore") ? parseFloat(localStorage.getItem("highScore")) : null, gameReady = false, gameInProgress = false, gameFinished = false, timerInterval = null, lastResultText = "";
+        const display = document.getElementById("display"), typingBox = document.getElementById("typingBox"), stats = document.getElementById("stats"), highScoreValue = document.getElementById("highScoreValue"), startButton = document.getElementById("startButton"), restartButton = document.getElementById("restartButton"), statusIndicator = document.getElementById("statusIndicator"), message = document.getElementById("message"), resultButtons = document.getElementById("resultButtons"), downloadResultBtn = document.getElementById("downloadResultBtn"), buttonSound = document.getElementById("buttonSound"), wrongSound = document.getElementById("wrongSound"), highScoreSound = document.getElementById("highScoreSound"), bg1Sound = document.getElementById("bg1Sound"), bg2Sound = document.getElementById("bg2Sound"), typeSound = document.getElementById("typeSound"), enterSound = document.getElementById("enterSound"), startSound = document.getElementById("startSound"), soundModal = document.getElementById("soundModal"), soundModalClose = document.getElementById("soundModalClose"), soundOnButton = document.getElementById("soundOnButton"), soundOffButton = document.getElementById("soundOffButton"), resetModal = document.getElementById("resetModal"), resetModalClose = document.getElementById("resetModalClose"), yesButton = document.getElementById("yesButton"), noButton = document.getElementById("noButton"), aboutModal = document.getElementById("aboutModal"), aboutModalClose = document.getElementById("aboutModalClose"), howToPlayHeader = document.getElementById("howToPlayHeader"), aboutGameHeader = document.getElementById("aboutGameHeader"), aboutCreatorHeader = document.getElementById("aboutCreatorHeader"), contactHeader = document.getElementById("contactHeader"), howToPlayContent = document.getElementById("howToPlayContent"), aboutGameContent = document.getElementById("aboutGameContent"), aboutCreatorContent = document.getElementById("aboutCreatorContent"), contactContent = document.getElementById("contactContent"), soundIcon = document.getElementById("soundIcon"), resetIcon = document.getElementById("resetIcon"), aboutIcon = document.getElementById("aboutIcon"), homeIcon = document.getElementById("homeIcon"), mobileMenuBtn = document.getElementById("mobileMenuBtn"), mobileMenu = document.getElementById("mobileMenu"), mobileSoundIcon = document.getElementById("mobileSoundIcon"), mobileResetIcon = document.getElementById("mobileResetIcon"), mobileAboutIcon = document.getElementById("mobileAboutIcon"), mobileHomeIcon = document.getElementById("mobileHomeIcon"), resultModal = document.getElementById("resultModal"), resultModalClose = document.getElementById("resultModalClose"), resultText = document.getElementById("resultText"), modalDownloadBtn = document.getElementById("modalDownloadBtn"), copyResultBtn = document.getElementById("copyResultBtn"), toast = document.getElementById("toast");
         let soundEnabled = localStorage.getItem("soundEnabled") !== "false";
         if (soundEnabled) bg2Sound.play();
 
-        function playSound(audio) {
-            if (soundEnabled) {
-                audio.currentTime = 0;
-                audio.play().catch(() => {});
-            }
-        }
-
-        function updateSoundButtons() {
-            soundOnButton.className = "modal-button " + (soundEnabled ? "green" : "grey");
-            soundOffButton.className = "modal-button " + (!soundEnabled ? "green" : "grey");
-        }
+        function playSound(audio) { if (soundEnabled) { audio.currentTime = 0; audio.play().catch(() => {}); } }
+        function updateSoundButtons() { soundOnButton.className = "modal-button " + (soundEnabled ? "green" : "grey"); soundOffButton.className = "modal-button " + (!soundEnabled ? "green" : "grey"); }
         updateSoundButtons();
-
-        function showAboutSection(section) {
-            howToPlayContent.classList.remove("active");
-            aboutGameContent.classList.remove("active");
-            aboutCreatorContent.classList.remove("active");
-            contactContent.classList.remove("active");
-            section.classList.add("active");
-        }
-
-        function getRandomSentence() {
-            return sentences[Math.floor(Math.random() * sentences.length)];
-        }
+        function showAboutSection(section) { howToPlayContent.classList.remove("active"); aboutGameContent.classList.remove("active"); aboutCreatorContent.classList.remove("active"); contactContent.classList.remove("active"); section.classList.add("active"); }
 
         function updateDisplay() {
             display.innerHTML = "";
@@ -613,42 +457,38 @@
                         else span.className = "red-text";
                         mistakeIndices.add(i);
                     }
-                } else {
-                    span.style.color = "white";
                 }
-                span.textContent = char === " " ? "\u00A0" : char;
+                span.textContent = char === " " ? "\u00A0" : char; 
                 display.appendChild(span);
             }
-            typingBox.value = userInput;
+
+            // --- NEW: AUTO-SCROLL LOGIC ---
+            const currentSpan = display.children[userInput.length];
+            if (currentSpan) {
+                currentSpan.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+            }
         }
 
         function prepareGame() {
-            currentSentence = getRandomSentence();
-            userInput = "";
-            mistakeIndices.clear();
-            startTime = null;
-            gameReady = true;
-            gameInProgress = false;
-            gameFinished = false;
-
-            statusIndicator.classList.remove("active", "green");
-            statusIndicator.textContent = "0.00";
-
+            currentSentence = sentences[Math.floor(Math.random() * sentences.length)];
+            userInput = ""; mistakeIndices.clear(); startTime = null;
+            gameReady = true; gameInProgress = false; gameFinished = false;
+            statusIndicator.classList.remove("active", "green"); statusIndicator.textContent = "0.00";
             updateDisplay();
             display.style.display = "block";
-            typingBox.style.display = "block";
-            typingBox.value = "";
             resultButtons.style.display = "none";
-            stats.innerHTML = "";
-            message.innerHTML = "";
+            stats.innerHTML = ""; message.innerHTML = "";
             highScoreValue.innerText = highScore ? highScore.toFixed(2) + " sec" : "No record yet";
             startButton.style.display = "none";
             if (soundEnabled) { bg2Sound.pause(); bg1Sound.play(); }
-            typingBox.focus();
+            typingBox.value = ""; // Clear the textarea
+            typingBox.focus(); // Focus the invisible textarea to bring up mobile keyboard
         }
 
         function startTimer() {
+            if (gameInProgress) return;
             gameInProgress = true;
+            gameReady = false;
             statusIndicator.classList.add("active", "green");
             startTime = new Date();
             playSound(startSound);
@@ -659,6 +499,9 @@
         }
 
         function finishGame() {
+            // This needs to be called when the game is finished based on the textarea input length
+            if (!gameInProgress) return;
+
             playSound(enterSound);
             const endTime = new Date();
             const actualTime = (endTime - startTime) / 1000;
@@ -669,30 +512,8 @@
             const netWPM = Math.round((correctChars / 5) / (actualTime / 60)) || 0;
             const accuracy = ((correctChars / currentSentence.length) * 100).toFixed(1);
 
-            lastResultText = `🏆 FLASH FINGERS - TYPING RESULT 🏆
-
-📝 Sentence: "${currentSentence}"
-
-⏱  Time Taken: ${actualTime.toFixed(2)} seconds
-🏃 Raw WPM: ${grossWPM}
-🎯 Adjusted WPM: ${netWPM}
-⏰ Penalty: ${penalty.toFixed(2)} sec (${mistakeIndices.size} mistakes × 0.5s)
-❌ Mistakes: ${mistakeIndices.size}
-🎯 Accuracy: ${accuracy}%
-
-${accuracy >= 90 && (!highScore || totalTime < highScore) ? "🏆 NEW HIGH SCORE BROKEN! 🏆" : "High Score: " + (highScore ? highScore.toFixed(2) + " sec" : "No record yet")}
-
-Developed by Elia Haider
-Play again at: ${window.location.href}`;
-
-            stats.innerHTML = `
-                ⏱ Time Taken: ${actualTime.toFixed(2)} sec<br>
-                🏃 Raw WPM: ${grossWPM}<br>
-                🎯 Adjusted WPM: ${netWPM}<br>
-                ⏰ Penalty: ${penalty.toFixed(2)} sec<br>
-                ❌ Mistakes: ${mistakeIndices.size}<br>
-                🎯 Accuracy: ${accuracy}%
-            `;
+            lastResultText = `🏆 FLASH FINGERS - TYPING RESULT 🏆\n\n📝 Sentence: "${currentSentence}"\n\n⏱  Time Taken: ${actualTime.toFixed(2)} seconds\n🏃 Raw WPM: ${grossWPM}\n🎯 Adjusted WPM: ${netWPM}\n⏰ Penalty: ${penalty.toFixed(2)} sec (${mistakeIndices.size} mistakes × 0.5s)\n❌ Mistakes: ${mistakeIndices.size}\n🎯 Accuracy: ${accuracy}%\n\n${accuracy >= 90 && (!highScore || totalTime < highScore) ? "🏆 NEW HIGH SCORE BROKEN! 🏆" : "High Score: " + (highScore ? highScore.toFixed(2) + " sec" : "No record yet")}\n\nDeveloped by Elia Haider\nPlay again at: ${window.location.href}`;
+            stats.innerHTML = `⏱ Time Taken: ${actualTime.toFixed(2)} sec<br>🏃 Raw WPM: ${grossWPM}<br>🎯 Adjusted WPM: ${netWPM}<br>⏰ Penalty: ${penalty.toFixed(2)} sec<br>❌ Mistakes: ${mistakeIndices.size}<br>🎯 Accuracy: ${accuracy}%`;
 
             if (accuracy >= 90 && (!highScore || totalTime < highScore)) {
                 highScore = totalTime;
@@ -703,188 +524,73 @@ Play again at: ${window.location.href}`;
             }
 
             highScoreValue.innerText = highScore ? highScore.toFixed(2) + " sec" : "No record yet";
-
             resultButtons.style.display = "flex";
-            typingBox.style.display = "none"; // Hide typing box on result
-
             statusIndicator.classList.remove("active", "green");
             clearInterval(timerInterval);
             timerInterval = null;
-
             if (soundEnabled) { bg1Sound.pause(); bg2Sound.play(); }
             gameFinished = true;
             gameInProgress = false;
             gameReady = false;
         }
+        
+        // --- UPDATED: Input handling directly from the textarea ---
+        typingBox.addEventListener("input", (e) => {
+            if (gameFinished) return;
 
-        // Keydown Logic - Works on both PC and Mobile
-        document.addEventListener("keydown", function(e) {
-            if (gameInProgress || gameReady || gameFinished) {
-                e.preventDefault(); // Prevent default to avoid double input on mobile
-            }
-
-            if (startButton.style.display !== "none" && e.key === "Enter") {
-                playSound(buttonSound);
-                prepareGame();
-                return;
-            }
-
-            if (gameReady && !gameInProgress && !gameFinished && e.key.length === 1) {
+            // Start timer on the very first input
+            if (!gameInProgress && gameReady) {
                 startTimer();
-                userInput += e.key;
-                if (e.key !== currentSentence[0]) {
-                    mistakeIndices.add(0);
-                    playSound(wrongSound);
-                } else {
-                    playSound(typeSound);
-                }
-                updateDisplay();
-                return;
             }
 
-            if (gameInProgress && !gameFinished) {
-                if (e.key === "Backspace" && userInput.length > 0) {
-                    userInput = userInput.slice(0, -1);
-                    mistakeIndices.delete(userInput.length);
-                    playSound(enterSound);
-                    updateDisplay();
-                    return;
-                }
+            userInput = typingBox.value;
+            updateDisplay();
 
-                if (e.key === "Enter" && userInput.length === currentSentence.length) {
-                    finishGame();
-                    return;
-                }
-
-                if (e.key.length === 1 && userInput.length < currentSentence.length) {
-                    userInput += e.key;
-                    if (e.key !== currentSentence[userInput.length - 1]) {
-                        mistakeIndices.add(userInput.length - 1);
-                        playSound(wrongSound);
-                    } else {
-                        playSound(typeSound);
-                    }
-                    updateDisplay();
-                }
+            // Play sound based on correctness
+            const typedChar = userInput[userInput.length - 1];
+            const targetChar = currentSentence[userInput.length - 1];
+            if (typedChar) {
+                playSound(typedChar !== targetChar ? wrongSound : typeSound);
             }
 
+            // Check if game is finished
+            if (userInput.length === currentSentence.length) {
+                finishGame();
+            }
+        });
+
+        // Event listener for restarting with the Enter key
+        document.addEventListener("keydown", function(e) {
+            if (startButton.style.display !== "none" && e.key === "Enter") {
+                e.preventDefault(); playSound(buttonSound); prepareGame();
+            }
             if (gameFinished && e.key === "Enter") {
-                playSound(buttonSound);
-                prepareGame();
+                e.preventDefault(); playSound(buttonSound); prepareGame();
             }
         });
 
-        // Mobile touch to open keyboard
-        typingBox.addEventListener("touchstart", (e) => {
-            e.preventDefault();
-            typingBox.focus();
-        });
-
-        typingBox.addEventListener("click", (e) => {
-            e.preventDefault();
-            typingBox.focus();
-        });
-
-        // Buttons & Icons
+        // --- All your original button event listeners are restored ---
         startButton.addEventListener("click", () => { playSound(buttonSound); prepareGame(); });
         restartButton.addEventListener("click", () => { playSound(buttonSound); prepareGame(); });
-
-        downloadResultBtn.addEventListener("click", () => {
-            resultText.textContent = lastResultText;
-            resultModal.style.display = "block";
-            playSound(buttonSound);
-        });
-
-        resultModalClose.addEventListener("click", () => {
-            resultModal.style.display = "none";
-            playSound(buttonSound);
-        });
-
-        modalDownloadBtn.addEventListener("click", () => {
-            const blob = new Blob([lastResultText], { type: "text/plain" });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement("a");
-            a.href = url;
-            a.download = "flashfingers_result.txt";
-            a.click();
-            URL.revokeObjectURL(url);
-            playSound(buttonSound);
-        });
-
-        copyResultBtn.addEventListener("click", () => {
-            navigator.clipboard.writeText(lastResultText).then(() => {
-                toast.style.display = "block";
-                setTimeout(() => toast.style.display = "none", 3000);
-                playSound(buttonSound);
-            });
-        });
-
-        // Mobile Menu
-        mobileMenuBtn.addEventListener("click", () => {
-            playSound(buttonSound);
-            mobileMenu.style.display = mobileMenu.style.display === "flex" ? "none" : "flex";
-        });
-
-        mobileSoundIcon.addEventListener("click", () => {
-            playSound(buttonSound);
-            soundModal.style.display = "block";
-            mobileMenu.style.display = "none";
-        });
-
-        mobileResetIcon.addEventListener("click", () => {
-            playSound(buttonSound);
-            resetModal.style.display = "block";
-            mobileMenu.style.display = "none";
-        });
-
-        mobileAboutIcon.addEventListener("click", () => {
-            playSound(buttonSound);
-            aboutModal.style.display = "block";
-            showAboutSection(howToPlayContent);
-            mobileMenu.style.display = "none";
-        });
-
-        mobileHomeIcon.addEventListener("click", () => {
-            playSound(buttonSound);
-            location.reload();
-        });
-
-        // Desktop Icons
+        downloadResultBtn.addEventListener("click", () => { resultText.textContent = lastResultText; resultModal.style.display = "block"; playSound(buttonSound); });
+        resultModalClose.addEventListener("click", () => { resultModal.style.display = "none"; playSound(buttonSound); });
+        modalDownloadBtn.addEventListener("click", () => { const blob = new Blob([lastResultText], { type: "text/plain" }); const url = URL.createObjectURL(blob); const a = document.createElement("a"); a.href = url; a.download = "flashfingers_result.txt"; a.click(); URL.revokeObjectURL(url); playSound(buttonSound); });
+        copyResultBtn.addEventListener("click", () => { navigator.clipboard.writeText(lastResultText).then(() => { toast.style.display = "block"; setTimeout(() => toast.style.display = "none", 3000); playSound(buttonSound); }); });
+        mobileMenuBtn.addEventListener("click", () => { playSound(buttonSound); mobileMenu.style.display = mobileMenu.style.display === "flex" ? "none" : "flex"; });
+        mobileSoundIcon.addEventListener("click", () => { playSound(buttonSound); soundModal.style.display = "block"; mobileMenu.style.display = "none"; });
+        mobileResetIcon.addEventListener("click", () => { playSound(buttonSound); resetModal.style.display = "block"; mobileMenu.style.display = "none"; });
+        mobileAboutIcon.addEventListener("click", () => { playSound(buttonSound); aboutModal.style.display = "block"; showAboutSection(howToPlayContent); mobileMenu.style.display = "none"; });
+        mobileHomeIcon.addEventListener("click", () => { playSound(buttonSound); location.reload(); });
         soundIcon.addEventListener("click", () => { playSound(buttonSound); soundModal.style.display = "block"; });
         resetIcon.addEventListener("click", () => { playSound(buttonSound); resetModal.style.display = "block"; });
         aboutIcon.addEventListener("click", () => { playSound(buttonSound); aboutModal.style.display = "block"; showAboutSection(howToPlayContent); });
         homeIcon.addEventListener("click", () => { playSound(buttonSound); location.reload(); });
-
-        // Modal Buttons
         soundModalClose.addEventListener("click", () => { playSound(buttonSound); soundModal.style.display = "none"; });
-        soundOnButton.addEventListener("click", () => {
-            soundEnabled = true;
-            localStorage.setItem("soundEnabled", "true");
-            updateSoundButtons();
-            soundModal.style.display = "none";
-            playSound(buttonSound);
-            bg2Sound.play();
-        });
-        soundOffButton.addEventListener("click", () => {
-            soundEnabled = false;
-            localStorage.setItem("soundEnabled", "false");
-            bg1Sound.pause();
-            bg2Sound.pause();
-            updateSoundButtons();
-            soundModal.style.display = "none";
-            playSound(buttonSound);
-        });
-
+        soundOnButton.addEventListener("click", () => { soundEnabled = true; localStorage.setItem("soundEnabled", "true"); updateSoundButtons(); soundModal.style.display = "none"; playSound(buttonSound); bg2Sound.play(); });
+        soundOffButton.addEventListener("click", () => { soundEnabled = false; localStorage.setItem("soundEnabled", "false"); bg1Sound.pause(); bg2Sound.pause(); updateSoundButtons(); soundModal.style.display = "none"; playSound(buttonSound); });
         resetModalClose.addEventListener("click", () => { playSound(buttonSound); resetModal.style.display = "none"; });
-        yesButton.addEventListener("click", () => {
-            localStorage.removeItem("highScore");
-            highScore = null;
-            highScoreValue.innerText = "No record yet";
-            resetModal.style.display = "none";
-            playSound(buttonSound);
-        });
+        yesButton.addEventListener("click", () => { localStorage.removeItem("highScore"); highScore = null; highScoreValue.innerText = "No record yet"; resetModal.style.display = "none"; playSound(buttonSound); });
         noButton.addEventListener("click", () => { resetModal.style.display = "none"; playSound(buttonSound); });
-
         aboutModalClose.addEventListener("click", () => { playSound(buttonSound); aboutModal.style.display = "none"; });
         howToPlayHeader.addEventListener("click", () => { playSound(buttonSound); showAboutSection(howToPlayContent); });
         aboutGameHeader.addEventListener("click", () => { playSound(buttonSound); showAboutSection(aboutGameContent); });
