@@ -78,13 +78,98 @@
     </style>
 </head>
 <body>
-    <!-- HTML waisa hi hai -->
-    <div id="mobileMenuBtn">☰</div><div id="mobileMenu"><span id="mobileSoundIcon">🔊</span><span id="mobileResetIcon">⚙️</span><span id="mobileAboutIcon">ℹ️</span><span id="mobileHomeIcon">🏠</span></div><div id="desktopIcons"><span id="soundIcon">🔊</span><span id="resetIcon">⚙️</span><span id="aboutIcon">ℹ️</span></div><span id="homeIcon">🏠</span><img src="logo/LOGO.png" alt="Flash Fingers Logo" id="gameLogo"><h1>Flash Fingers - Typing Game</h1><button id="startButton">Start</button><div id="statusIndicator">0.00</div><div id="gameContainer"><div id="display"></div><textarea id="typingBox" autocorrect="off" autocapitalize="off" spellcheck="false"></textarea></div><div id="stats"></div><div id="highScore">High Score: <span id="highScoreValue"></span> 🏆</div><div id="message"></div><div id="resultButtons"><button id="downloadResultBtn">📥 Download Result</button><button id="restartButton">Restart</button></div><div id="resultModal" class="modal"><span class="modal-close" id="resultModalClose">✖</span><div class="modal-header">🏆 Your Typing Result</div><pre id="resultText">Loading...</pre><button class="download-btn" id="modalDownloadBtn">💾 Download Result</button><button class="copy-btn" id="copyResultBtn">📋 Copy Result</button></div><div id="toast">Result copied to clipboard! ✅</div><div id="soundModal" class="modal"><span id="soundModalClose" class="modal-close">✖</span><div class="modal-header">Sound Settings</div><div class="modal-buttons"><button id="soundOnButton" class="modal-button">ON</button><button id="soundOffButton" class="modal-button">OFF</button></div></div><div id="resetModal" class="modal"><span id="resetModalClose" class="modal-close">✖</span><div class="modal-header">Do you want to reset high score?</div><div class="modal-buttons"><button id="yesButton" class="modal-button">Yes</button><button id="noButton" class="modal-button">No</button></div></div><div id="aboutModal" class="modal"><span id="aboutModalClose" class="modal-close">✖</span><div class="modal-header" id="howToPlayHeader">How to Play</div><div class="modal-header" id="aboutGameHeader">About Game</div><div class="modal-header" id="aboutCreatorHeader">About Creator</div><div class="modal-header" id="contactHeader">Contact Info</div><div id="howToPlayContent" class="modal-content active"><p>1. Press <strong>Enter</strong> or click "Start" to begin.<br>2. A random sentence will appear — get ready!<br>3. <strong>Timer starts when you type the first letter</strong> (and that letter counts!)<br>4. Type accurately and press Enter to finish.<br>5. See your Time, WPM, Accuracy, and more!<br>6. Press <strong>Enter</strong> again or click Restart for next round.<br><strong>New:</strong> Multiple sentences + WPM + Space mistake visible!</p></div><div id="aboutGameContent" class="modal-content"><p>This game helps improve typing speed and accuracy with random sentences, WPM tracking, and a sleek design.</p></div><div id="aboutCreatorContent" class="modal-content"><p>Developed by Elia Haider from Baltistan, Pakistan.</p></div><div id="contactContent" class="modal-content"><p>Email: <a href="mailto:haiderhashmi1120@gmail.com">haiderhashmi1120@gmail.com</a><br>YouTube: <a href="https://www.youtube.com/channel/UCAaSY7QKjtxdsIphuZEcO-g" target="_blank">Elia Haider's Channel</a></p></div></div>
-    <div id="adModal" style="display: none;"><span id="adTimer">3</span><button id="skipAdBtn">Skip</button><a id="adContent" href="https://www.instagram.com/your_advertiser_profile" target="_blank"><img src="https://via.placeholder.com/800x400.png?text=Your+Ad+Here" alt="Advertisement"></a></div>
-    <audio id="buttonSound" src="sounds/button.mp3"></audio><audio id="wrongSound" src="sounds/wong.mp3"></audio><audio id="highScoreSound" src="sounds/high score.mp3"></audio><audio id="bg1Sound" src="sounds/bg1.mp3" loop></audio><audio id="bg2Sound" src="sounds/bg2.mp3" loop></audio><audio id="typeSound" src="sounds/type.mp3"></audio><audio id="enterSound" src="sounds/enter.mp3"></audio><audio id="startSound" src="sounds/start.mp3"></audio>
+    <!-- HTML Body Section -->
+    <div id="mobileMenuBtn">☰</div>
+    <div id="mobileMenu">
+        <span id="mobileSoundIcon">🔊</span>
+        <span id="mobileResetIcon">⚙️</span>
+        <span id="mobileAboutIcon">ℹ️</span>
+        <span id="mobileHomeIcon">🏠</span>
+    </div>
+    <div id="desktopIcons">
+        <span id="soundIcon">🔊</span>
+        <span id="resetIcon">⚙️</span>
+        <span id="aboutIcon">ℹ️</span>
+    </div>
+    <span id="homeIcon">🏠</span>
+    <img src="logo/LOGO.png" alt="Flash Fingers Logo" id="gameLogo">
+    <h1>Flash Fingers - Typing Game</h1>
+    <button id="startButton">Start</button>
+    <div id="statusIndicator">0.00</div>
+    <div id="gameContainer">
+        <div id="display"></div>
+        <textarea id="typingBox" autocorrect="off" autocapitalize="off" spellcheck="false"></textarea>
+    </div>
+    <div id="stats"></div>
+    <div id="highScore">High Score: <span id="highScoreValue"></span> 🏆</div>
+    <div id="message"></div>
+    <!-- CHANGE HERE -->
+    <div id="resultButtons">
+        <button id="downloadResultBtn">Full Result 📥</button>
+        <button id="restartButton">Restart</button>
+    </div>
+    <!-- END OF CHANGE -->
+    <div id="resultModal" class="modal">
+        <span class="modal-close" id="resultModalClose">✖</span>
+        <div class="modal-header">🏆 Your Full Typing Result</div>
+        <pre id="resultText">Loading...</pre>
+        <button class="download-btn" id="modalDownloadBtn">💾 Download Result</button>
+        <button class="copy-btn" id="copyResultBtn">📋 Copy Result</button>
+    </div>
+    <div id="toast">Result copied to clipboard! ✅</div>
+    <div id="soundModal" class="modal">
+        <span id="soundModalClose" class="modal-close">✖</span>
+        <div class="modal-header">Sound Settings</div>
+        <div class="modal-buttons">
+            <button id="soundOnButton" class="modal-button">ON</button>
+            <button id="soundOffButton" class="modal-button">OFF</button>
+        </div>
+    </div>
+    <div id="resetModal" class="modal">
+        <span id="resetModalClose" class="modal-close">✖</span>
+        <div class="modal-header">Do you want to reset high score?</div>
+        <div class="modal-buttons">
+            <button id="yesButton" class="modal-button">Yes</button>
+            <button id="noButton" class="modal-button">No</button>
+        </div>
+    </div>
+    <div id="aboutModal" class="modal">
+        <span id="aboutModalClose" class="modal-close">✖</span>
+        <div class="modal-header" id="howToPlayHeader">How to Play</div>
+        <div class="modal-header" id="aboutGameHeader">About Game</div>
+        <div class="modal-header" id="aboutCreatorHeader">About Creator</div>
+        <div class="modal-header" id="contactHeader">Contact Info</div>
+        <div id="howToPlayContent" class="modal-content active">
+            <p>1. Press <strong>Enter</strong> or click "Start" to begin.<br>2. A random sentence will appear — get ready!<br>3. <strong>Timer starts when you type the first letter</strong> (and that letter counts!)<br>4. Type accurately and press Enter to finish.<br>5. See your Time, WPM, Accuracy, and more!<br>6. Press <strong>Enter</strong> again or click Restart for next round.<br><strong>New:</strong> Multiple sentences + WPM + Space mistake visible!</p>
+        </div>
+        <div id="aboutGameContent" class="modal-content">
+            <p>This game helps improve typing speed and accuracy with random sentences, WPM tracking, and a sleek design.</p>
+        </div>
+        <div id="aboutCreatorContent" class="modal-content">
+            <p>Developed by Elia Haider from Baltistan, Pakistan.</p>
+        </div>
+        <div id="contactContent" class="modal-content">
+            <p>Email: <a href="mailto:haiderhashmi1120@gmail.com">haiderhashmi1120@gmail.com</a><br>YouTube: <a href="https://www.youtube.com/channel/UCAaSY7QKjtxdsIphuZEcO-g" target="_blank">Elia Haider's Channel</a></p>
+        </div>
+    </div>
+    <div id="adModal" style="display: none;">
+        <span id="adTimer">3</span>
+        <button id="skipAdBtn">Skip</button>
+        <a id="adContent" href="https://www.instagram.com/your_advertiser_profile" target="_blank">
+            <img src="https://via.placeholder.com/800x400.png?text=Your+Ad+Here" alt="Advertisement">
+        </a>
+    </div>
+    <audio id="buttonSound" src="sounds/button.mp3"></audio>
+    <audio id="wrongSound" src="sounds/wong.mp3"></audio>
+    <audio id="highScoreSound" src="sounds/high score.mp3"></audio>
+    <audio id="bg1Sound" src="sounds/bg1.mp3" loop></audio>
+    <audio id="bg2Sound" src="sounds/bg2.mp3" loop></audio>
+    <audio id="typeSound" src="sounds/type.mp3"></audio>
+    <audio id="enterSound" src="sounds/enter.mp3"></audio>
+    <audio id="startSound" src="sounds/start.mp3"></audio>
     
     <script>
-        // Poora JavaScript neeche hai, jahan zaroori tabdeeli ki gayi hai
+        // JavaScript Section
         const sentences = ["The quick brown fox jumps over the lazy dog.", "Pack my box with five dozen liquor jugs.", "The five boxing wizards jump quickly.", "How vexingly quick daft zebras jump!", "Bright vixens jump; dozy fowl quack.", "Sphinx of black quartz, judge my vow.", "Two driven jocks help fax my big quiz.", "Jinxed wizards pluck ivy from the big quilt.", "Crazy Fredrick bought many very exquisite opal jewels.", "Jived fox nymph grabs quick waltz.", "Glib jocks quiz nymph to vex dwarf.", "Blowzy red vixens fight for a quick jump.", "Joaquin Phoenix was gazed by MTV for luck.", "Waxy and quivering, jocks fumble the pizza.", "The jay, pig, fox, zebra and my wolves quack!"];
         let currentSentence = "", userInput = "", startTime = null, mistakeIndices = new Set(), highScore = localStorage.getItem("highScore") ? parseFloat(localStorage.getItem("highScore")) : null, gameReady = false, gameInProgress = false, gameFinished = false, timerInterval = null, lastResultText = "";
         let canRestart = true;
@@ -110,8 +195,6 @@
                         span.className = "green-text";
                     } else {
                         if (char === " ") span.className = "space-error"; else span.className = "red-text";
-                        // FIX: Mistake count ke liye yahan se line hata di gayi hai.
-                        // mistakeIndices.add(i); // <-- YEH LINE HATA DI GAYI HAI
                     }
                 }
                 span.textContent = char === " " ? "\u00A0" : char; 
@@ -133,28 +216,30 @@
             playSound(startSound);
             timerInterval = setInterval(() => { const elapsed = (new Date() - startTime) / 1000; statusIndicator.textContent = elapsed.toFixed(2); }, 10);
         }
+
         function finishGame() {
             if (!gameInProgress) return;
             playSound(enterSound);
             const endTime = new Date(); const actualTime = (endTime - startTime) / 1000;
 
-            // ---- FIX START ----
-            // Ab mistakes sirf game khatam hone par calculate hongi
             mistakeIndices.clear();
             for (let i = 0; i < currentSentence.length; i++) {
                 if (userInput[i] !== currentSentence[i]) {
                     mistakeIndices.add(i);
                 }
             }
-            // ---- FIX END ----
 
             const correctChars = currentSentence.length - mistakeIndices.size; const grossWPM = Math.round((currentSentence.length / 5) / (actualTime / 60)) || 0; const penalty = mistakeIndices.size * 0.5; const totalTime = actualTime + penalty; const netWPM = Math.round((correctChars / 5) / (actualTime / 60)) || 0; const accuracy = ((correctChars / currentSentence.length) * 100).toFixed(1);
-            lastResultText = `🏆 FLASH FINGERS - TYPING RESULT 🏆\n\n📝 Sentence: "${currentSentence}"\n\n⏱  Time Taken: ${actualTime.toFixed(2)} seconds\n🏃 Raw WPM: ${grossWPM}\n🎯 Adjusted WPM: ${netWPM}\n⏰ Penalty: ${penalty.toFixed(2)} sec (${mistakeIndices.size} mistakes × 0.5s)\n❌ Mistakes: ${mistakeIndices.size}\n🎯 Accuracy: ${accuracy}%\n\n${accuracy >= 90 && (!highScore || totalTime < highScore) ? "🏆 NEW HIGH SCORE BROKEN! 🏆" : "High Score: " + (highScore ? highScore.toFixed(2) + " sec" : "No record yet")}\n\nDeveloped by Elia Haider\nPlay again at: ${window.location.href}`;
-            stats.innerHTML = `⏱ Time Taken: ${actualTime.toFixed(2)} sec<br>🏃 Raw WPM: ${grossWPM}<br>🎯 Adjusted WPM: ${netWPM}<br>⏰ Penalty: ${penalty.toFixed(2)} sec<br>❌ Mistakes: ${mistakeIndices.size}<br>🎯 Accuracy: ${accuracy}%`;
+            
+            lastResultText = `🏆 FLASH FINGERS - TYPING RESULT 🏆\n\n📝 Sentence: "${currentSentence}"\n\n⏱  Time Taken: ${actualTime.toFixed(2)} seconds\n🏃 Raw WPM: ${grossWPM}\n🎯 Adjusted WPM: ${netWPM}\n⏰ Penalty: ${penalty.toFixed(2)} sec (${mistakeIndices.size} mistakes × 0.5s)\n🏁 Final Time: ${totalTime.toFixed(2)} seconds\n❌ Mistakes: ${mistakeIndices.size}\n🎯 Accuracy: ${accuracy}%\n\n${accuracy >= 90 && (!highScore || totalTime < highScore) ? "🏆 NEW HIGH SCORE BROKEN! 🏆" : "High Score: " + (highScore ? highScore.toFixed(2) + " sec" : "No record yet")}\n\nDeveloped by Elia Haider\nPlay again at: ${window.location.href}`;
+            
+            stats.innerHTML = `<b>--- Quick Result ---</b><br>⏱ Time Taken: ${actualTime.toFixed(2)} sec<br>❌ Mistakes: ${mistakeIndices.size}<br>⏰ Penalty: ${penalty.toFixed(2)} sec<br>🎯 Accuracy: ${accuracy}%<br><b>🏁 Final Time: ${totalTime.toFixed(2)} sec</b>`;
+            
             if (accuracy >= 90 && (!highScore || totalTime < highScore)) { highScore = totalTime; localStorage.setItem("highScore", highScore); message.innerHTML = "<span style='color:#00ff00; font-size:24px;'>🏆 High Score Broken! 🏆</span>"; playSound(highScoreSound); setTimeout(() => message.innerHTML = "", 3000); }
             highScoreValue.innerText = highScore ? highScore.toFixed(2) + " sec" : "No record yet";
             resultButtons.style.display = "flex"; statusIndicator.classList.remove("active", "green"); clearInterval(timerInterval); timerInterval = null; if (soundEnabled) { bg1Sound.pause(); bg2Sound.play(); } gameFinished = true; gameInProgress = false; gameReady = false; canRestart = false; restartButton.disabled = true; setTimeout(() => { canRestart = true; restartButton.disabled = false; }, 3000);
         }
+        
         typingBox.addEventListener("input", (e) => {
             if (gameFinished) return;
             if (!gameInProgress && gameReady) { 
@@ -180,7 +265,6 @@
         }
         function showResult() { resultText.textContent = lastResultText; resultModal.style.display = "block"; playSound(buttonSound); }
         
-        // --- EVENT LISTENERS WITH ANALYTICS ---
         startButton.addEventListener("click", () => { 
             gtag('event', 'game_start');
             playSound(buttonSound); 
@@ -213,7 +297,6 @@
             navigator.clipboard.writeText(lastResultText).then(() => { toast.style.display = "block"; setTimeout(() => toast.style.display = "none", 3000); playSound(buttonSound); }); 
         });
         
-        // --- Baaki ke event listeners waise hi hain ---
         resultModalClose.addEventListener("click", () => { resultModal.style.display = "none"; playSound(buttonSound); });
         mobileMenuBtn.addEventListener("click", () => { playSound(buttonSound); mobileMenu.style.display = mobileMenu.style.display === "flex" ? "none" : "flex"; });
         mobileSoundIcon.addEventListener("click", () => { playSound(buttonSound); soundModal.style.display = "block"; mobileMenu.style.display = "none"; });
