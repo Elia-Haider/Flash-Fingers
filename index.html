@@ -84,7 +84,7 @@
     <audio id="buttonSound" src="sounds/button.mp3"></audio><audio id="wrongSound" src="sounds/wong.mp3"></audio><audio id="highScoreSound" src="sounds/high score.mp3"></audio><audio id="bg1Sound" src="sounds/bg1.mp3" loop></audio><audio id="bg2Sound" src="sounds/bg2.mp3" loop></audio><audio id="typeSound" src="sounds/type.mp3"></audio><audio id="enterSound" src="sounds/enter.mp3"></audio><audio id="startSound" src="sounds/start.mp3"></audio>
     
     <script>
-        // Poora JavaScript waisa hi hai, bas jahan zaroorat hai wahan gtag() add kiya gaya hai
+        // Poora JavaScript neeche hai, jahan zaroori tabdeeli ki gayi hai
         const sentences = ["The quick brown fox jumps over the lazy dog.", "Pack my box with five dozen liquor jugs.", "The five boxing wizards jump quickly.", "How vexingly quick daft zebras jump!", "Bright vixens jump; dozy fowl quack.", "Sphinx of black quartz, judge my vow.", "Two driven jocks help fax my big quiz.", "Jinxed wizards pluck ivy from the big quilt.", "Crazy Fredrick bought many very exquisite opal jewels.", "Jived fox nymph grabs quick waltz.", "Glib jocks quiz nymph to vex dwarf.", "Blowzy red vixens fight for a quick jump.", "Joaquin Phoenix was gazed by MTV for luck.", "Waxy and quivering, jocks fumble the pizza.", "The jay, pig, fox, zebra and my wolves quack!"];
         let currentSentence = "", userInput = "", startTime = null, mistakeIndices = new Set(), highScore = localStorage.getItem("highScore") ? parseFloat(localStorage.getItem("highScore")) : null, gameReady = false, gameInProgress = false, gameFinished = false, timerInterval = null, lastResultText = "";
         let canRestart = true;
@@ -92,22 +92,26 @@
         const adModal = document.getElementById("adModal");
         const skipAdBtn = document.getElementById("skipAdBtn");
         const adTimer = document.getElementById("adTimer");
-        const adContent = document.getElementById("adContent"); // Ad content ko select kiya
+        const adContent = document.getElementById("adContent");
         let soundEnabled = localStorage.getItem("soundEnabled") !== "false";
         if (soundEnabled) bg2Sound.play();
         function playSound(audio) { if (soundEnabled) { audio.currentTime = 0; audio.play().catch(() => {}); } }
         function updateSoundButtons() { soundOnButton.className = "modal-button " + (soundEnabled ? "green" : "grey"); soundOffButton.className = "modal-button " + (!soundEnabled ? "green" : "grey"); }
         updateSoundButtons();
         function showAboutSection(section) { howToPlayContent.classList.remove("active"); aboutGameContent.classList.remove("active"); aboutCreatorContent.classList.remove("active"); contactContent.classList.remove("active"); section.classList.add("active"); }
+        
         function updateDisplay() {
             display.innerHTML = "";
             for (let i = 0; i < currentSentence.length; i++) {
                 const char = currentSentence[i];
                 const span = document.createElement("span");
                 if (i < userInput.length) {
-                    if (userInput[i] === char) { span.className = "green-text"; } else {
+                    if (userInput[i] === char) {
+                        span.className = "green-text";
+                    } else {
                         if (char === " ") span.className = "space-error"; else span.className = "red-text";
-                        mistakeIndices.add(i);
+                        // FIX: Mistake count ke liye yahan se line hata di gayi hai.
+                        // mistakeIndices.add(i); // <-- YEH LINE HATA DI GAYI HAI
                     }
                 }
                 span.textContent = char === " " ? "\u00A0" : char; 
@@ -116,6 +120,7 @@
             const currentSpan = display.children[userInput.length];
             if (currentSpan) { currentSpan.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" }); }
         }
+
         function prepareGame() {
             canRestart = true; currentSentence = sentences[Math.floor(Math.random() * sentences.length)]; userInput = ""; mistakeIndices.clear(); startTime = null; gameReady = true; gameInProgress = false; gameFinished = false; statusIndicator.classList.remove("active", "green"); statusIndicator.textContent = "0.00"; updateDisplay(); display.style.display = "block"; resultButtons.style.display = "none"; restartButton.disabled = false; stats.innerHTML = ""; message.innerHTML = ""; highScoreValue.innerText = highScore ? highScore.toFixed(2) + " sec" : "No record yet"; startButton.style.display = "none"; if (soundEnabled) { bg2Sound.pause(); bg1Sound.play(); } typingBox.value = ""; typingBox.focus(); 
         }
@@ -131,7 +136,19 @@
         function finishGame() {
             if (!gameInProgress) return;
             playSound(enterSound);
-            const endTime = new Date(); const actualTime = (endTime - startTime) / 1000; const correctChars = currentSentence.length - mistakeIndices.size; const grossWPM = Math.round((currentSentence.length / 5) / (actualTime / 60)) || 0; const penalty = mistakeIndices.size * 0.5; const totalTime = actualTime + penalty; const netWPM = Math.round((correctChars / 5) / (actualTime / 60)) || 0; const accuracy = ((correctChars / currentSentence.length) * 100).toFixed(1);
+            const endTime = new Date(); const actualTime = (endTime - startTime) / 1000;
+
+            // ---- FIX START ----
+            // Ab mistakes sirf game khatam hone par calculate hongi
+            mistakeIndices.clear();
+            for (let i = 0; i < currentSentence.length; i++) {
+                if (userInput[i] !== currentSentence[i]) {
+                    mistakeIndices.add(i);
+                }
+            }
+            // ---- FIX END ----
+
+            const correctChars = currentSentence.length - mistakeIndices.size; const grossWPM = Math.round((currentSentence.length / 5) / (actualTime / 60)) || 0; const penalty = mistakeIndices.size * 0.5; const totalTime = actualTime + penalty; const netWPM = Math.round((correctChars / 5) / (actualTime / 60)) || 0; const accuracy = ((correctChars / currentSentence.length) * 100).toFixed(1);
             lastResultText = `🏆 FLASH FINGERS - TYPING RESULT 🏆\n\n📝 Sentence: "${currentSentence}"\n\n⏱  Time Taken: ${actualTime.toFixed(2)} seconds\n🏃 Raw WPM: ${grossWPM}\n🎯 Adjusted WPM: ${netWPM}\n⏰ Penalty: ${penalty.toFixed(2)} sec (${mistakeIndices.size} mistakes × 0.5s)\n❌ Mistakes: ${mistakeIndices.size}\n🎯 Accuracy: ${accuracy}%\n\n${accuracy >= 90 && (!highScore || totalTime < highScore) ? "🏆 NEW HIGH SCORE BROKEN! 🏆" : "High Score: " + (highScore ? highScore.toFixed(2) + " sec" : "No record yet")}\n\nDeveloped by Elia Haider\nPlay again at: ${window.location.href}`;
             stats.innerHTML = `⏱ Time Taken: ${actualTime.toFixed(2)} sec<br>🏃 Raw WPM: ${grossWPM}<br>🎯 Adjusted WPM: ${netWPM}<br>⏰ Penalty: ${penalty.toFixed(2)} sec<br>❌ Mistakes: ${mistakeIndices.size}<br>🎯 Accuracy: ${accuracy}%`;
             if (accuracy >= 90 && (!highScore || totalTime < highScore)) { highScore = totalTime; localStorage.setItem("highScore", highScore); message.innerHTML = "<span style='color:#00ff00; font-size:24px;'>🏆 High Score Broken! 🏆</span>"; playSound(highScoreSound); setTimeout(() => message.innerHTML = "", 3000); }
@@ -141,7 +158,6 @@
         typingBox.addEventListener("input", (e) => {
             if (gameFinished) return;
             if (!gameInProgress && gameReady) { 
-                // GA Event: Game Started
                 gtag('event', 'game_start');
                 startTimer(); 
             }
@@ -151,7 +167,6 @@
             if (startButton.style.display !== "none" && e.key === "Enter") { e.preventDefault(); playSound(buttonSound); prepareGame(); }
             if (gameFinished && e.key === "Enter") {
                 if (!canRestart) return;
-                // GA Event: Game Restarted
                 gtag('event', 'game_restart', { 'method': 'enter_key' });
                 e.preventDefault(); playSound(buttonSound); prepareGame();
             }
@@ -166,48 +181,34 @@
         function showResult() { resultText.textContent = lastResultText; resultModal.style.display = "block"; playSound(buttonSound); }
         
         // --- EVENT LISTENERS WITH ANALYTICS ---
-        
         startButton.addEventListener("click", () => { 
-            // GA Event: Game Started (agar koi pehla akshar type karne ke bajaye button dabata hai)
             gtag('event', 'game_start');
             playSound(buttonSound); 
             prepareGame(); 
         });
-
         restartButton.addEventListener("click", () => { 
             if (!canRestart) return; 
-            // GA Event: Game Restarted
             gtag('event', 'game_restart', { 'method': 'button_click' });
             playSound(buttonSound); 
             prepareGame(); 
         });
-        
         downloadResultBtn.addEventListener("click", () => { 
-            // GA Event: Ad Shown
             gtag('event', 'ad_shown');
             showAd(); 
         });
-        
         skipAdBtn.addEventListener("click", () => {
-            // GA Event: Ad Skipped
             gtag('event', 'ad_skipped');
             adModal.style.display = 'none';
             showResult();
         });
-
         adContent.addEventListener('click', () => {
-            // GA Event: Ad Clicked
             gtag('event', 'ad_clicked');
         });
-
         modalDownloadBtn.addEventListener("click", () => { 
-            // GA Event: Result Downloaded
             gtag('event', 'result_downloaded');
             const blob = new Blob([lastResultText], { type: "text/plain" }); const url = URL.createObjectURL(blob); const a = document.createElement("a"); a.href = url; a.download = "flashfingers_result.txt"; a.click(); URL.revokeObjectURL(url); playSound(buttonSound); 
         });
-        
         copyResultBtn.addEventListener("click", () => { 
-            // GA Event: Result Copied
             gtag('event', 'result_copied');
             navigator.clipboard.writeText(lastResultText).then(() => { toast.style.display = "block"; setTimeout(() => toast.style.display = "none", 3000); playSound(buttonSound); }); 
         });
