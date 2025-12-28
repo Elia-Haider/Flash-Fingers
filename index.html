@@ -7,494 +7,118 @@
     
     <!-- Favicon -->
     <link rel="icon" href="logo/LOGO.png" type="image/png">
+
+    <!-- GOOGLE ANALYTICS TAG START -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-QW635JBDRH"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-QW635JBDRH');
+    </script>
+    <!-- GOOGLE ANALYTICS TAG END -->
     
     <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            text-align: center;
-            background: linear-gradient(135deg, #1e1e2e, #2a2a3d);
-            color: #ffffff;
-            margin: 0;
-            padding: 20px;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-start;
-            box-sizing: border-box;
-            position: relative;
-        }
-
-        h1 {
-            font-size: clamp(32px, 8vw, 48px);
-            margin: 15px 0;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-            color: #00ffcc;
-            letter-spacing: 2px;
-        }
-
-        #gameLogo {
-            width: clamp(120px, 40vw, 180px);
-            height: auto;
-            margin-bottom: 10px;
-            filter: drop-shadow(0 0 15px #00ffcc);
-            transition: transform 0.4s ease;
-        }
-
-        #gameLogo:hover {
-            transform: scale(1.1) rotate(2deg);
-        }
-
-        /* Desktop Icons */
-        #desktopIcons {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            display: flex;
-            gap: 15px;
-            z-index: 10;
-        }
-
-        #desktopIcons span {
-            font-size: 28px;
-            cursor: pointer;
-            color: #ffffff;
-            transition: transform 0.3s, color 0.3s;
-            padding: 8px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        #desktopIcons span:hover {
-            color: #00ffcc;
-            transform: scale(1.2);
-        }
-
-        #homeIcon {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            font-size: 28px;
-            cursor: pointer;
-            color: #ffffff;
-            transition: transform 0.3s, color 0.3s;
-            padding: 8px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.1);
-            z-index: 10;
-        }
-
-        #homeIcon:hover {
-            color: #00ffcc;
-            transform: scale(1.2);
-        }
-
-        /* Mobile Hamburger Menu */
-        #mobileMenuBtn {
-            position: absolute;
-            top: 15px;
-            left: 15px;
-            font-size: 32px;
-            cursor: pointer;
-            color: #ffffff;
-            padding: 8px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.1);
-            z-index: 20;
-            display: none;
-        }
-
-        #mobileMenu {
-            position: absolute;
-            top: 70px;
-            left: 15px;
-            background: rgba(40, 42, 54, 0.95);
-            border-radius: 15px;
-            padding: 15px;
-            display: none;
-            flex-direction: column;
-            gap: 15px;
-            z-index: 15;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
-            backdrop-filter: blur(10px);
-            border: 1px solid #00ffcc;
-        }
-
-        #mobileMenu span {
-            font-size: 26px;
-            cursor: pointer;
-            padding: 12px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.1);
-            transition: all 0.3s;
-        }
-
-        #mobileMenu span:hover {
-            background: rgba(0, 255, 204, 0.2);
-            transform: scale(1.1);
-        }
-
-        /* Container for Display and Typing Box */
-        #gameContainer {
-            position: relative;
-            width: 100%;
-            max-width: 95vw;
-            margin: 20px auto;
-        }
-
-        #display {
-            font-size: clamp(20px, 5vw, 28px);
-            background: rgba(40, 42, 54, 0.9);
-            padding: 15px 20px;
-            border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            backdrop-filter: blur(5px);
-            line-height: 1.6;
-            box-sizing: border-box;
-            display: none;
-            cursor: text; /* Indicate text input */
-
-            /* --- MOBILE FIX: Prevent wrapping and allow horizontal scroll --- */
-            white-space: nowrap;
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch; /* Smooth scroll for iOS */
-            padding-bottom: 10px; /* Make space for scrollbar */
-        }
-        
-        /* Custom Scrollbar for Display Area */
-        #display::-webkit-scrollbar {
-            height: 5px;
-        }
-        #display::-webkit-scrollbar-track {
-            background: #2a2a3d;
-            border-radius: 10px;
-        }
-        #display::-webkit-scrollbar-thumb {
-            background: #00ffcc;
-            border-radius: 10px;
-        }
-        
-        /* --- MOBILE FIX: Invisible textarea on top of display to capture input --- */
-        #typingBox {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            opacity: 0; /* Make it invisible */
-            border: none;
-            background: transparent;
-            resize: none;
-            outline: none;
-            color: transparent; /* Hide text and cursor */
-            caret-color: transparent;
-            padding: 0;
-            margin: 0;
-            z-index: 2; /* Ensure it's on top of #display */
-        }
-        
+        /* CSS mein koi badlav nahin hai */
+        body { font-family: 'Poppins', sans-serif; text-align: center; background: linear-gradient(135deg, #1e1e2e, #2a2a3d); color: #ffffff; margin: 0; padding: 20px; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; box-sizing: border-box; position: relative; }
+        h1 { font-size: clamp(32px, 8vw, 48px); margin: 15px 0; text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); color: #00ffcc; letter-spacing: 2px; }
+        #gameLogo { width: clamp(120px, 40vw, 180px); height: auto; margin-bottom: 10px; filter: drop-shadow(0 0 15px #00ffcc); transition: transform 0.4s ease; }
+        #gameLogo:hover { transform: scale(1.1) rotate(2deg); }
+        #desktopIcons { position: absolute; top: 20px; left: 20px; display: flex; gap: 15px; z-index: 10; }
+        #desktopIcons span { font-size: 28px; cursor: pointer; color: #ffffff; transition: transform 0.3s, color 0.3s; padding: 8px; border-radius: 50%; background: rgba(255, 255, 255, 0.1); }
+        #desktopIcons span:hover { color: #00ffcc; transform: scale(1.2); }
+        #homeIcon { position: absolute; top: 20px; right: 20px; font-size: 28px; cursor: pointer; color: #ffffff; transition: transform 0.3s, color 0.3s; padding: 8px; border-radius: 50%; background: rgba(255, 255, 255, 0.1); z-index: 10; }
+        #homeIcon:hover { color: #00ffcc; transform: scale(1.2); }
+        #mobileMenuBtn { position: absolute; top: 15px; left: 15px; font-size: 32px; cursor: pointer; color: #ffffff; padding: 8px; border-radius: 50%; background: rgba(255, 255, 255, 0.1); z-index: 20; display: none; }
+        #mobileMenu { position: absolute; top: 70px; left: 15px; background: rgba(40, 42, 54, 0.95); border-radius: 15px; padding: 15px; display: none; flex-direction: column; gap: 15px; z-index: 15; box-shadow: 0 8px 20px rgba(0,0,0,0.4); backdrop-filter: blur(10px); border: 1px solid #00ffcc; }
+        #mobileMenu span { font-size: 26px; cursor: pointer; padding: 12px; border-radius: 50%; background: rgba(255, 255, 255, 0.1); transition: all 0.3s; }
+        #mobileMenu span:hover { background: rgba(0, 255, 204, 0.2); transform: scale(1.1); }
+        #gameContainer { position: relative; width: 100%; max-width: 95vw; margin: 20px auto; }
+        #display { font-size: clamp(20px, 5vw, 28px); background: rgba(40, 42, 54, 0.9); padding: 15px 20px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); backdrop-filter: blur(5px); line-height: 1.6; box-sizing: border-box; display: none; cursor: text; white-space: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom: 10px; }
+        #display::-webkit-scrollbar { height: 5px; }
+        #display::-webkit-scrollbar-track { background: #2a2a3d; border-radius: 10px; }
+        #display::-webkit-scrollbar-thumb { background: #00ffcc; border-radius: 10px; }
+        #typingBox { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; border: none; background: transparent; resize: none; outline: none; color: transparent; caret-color: transparent; padding: 0; margin: 0; z-index: 2; }
         .green-text { color: #00ff00; text-shadow: 0 0 5px rgba(0,255,0,0.5); }
         .red-text { color: #ff4444; text-shadow: 0 0 5px rgba(255,68,68,0.5); }
-        .space-error {
-            position: relative;
-            display: inline-block;
-            background-color: rgba(255, 68, 68, 0.3);
-            border-radius: 3px;
-        }
-        
-        #statusIndicator {
-            width: clamp(100px, 30vw, 130px);
-            height: 40px;
-            background: linear-gradient(45deg, #ff4444, #ff6666);
-            margin: 15px auto;
-            border-radius: 20px;
-            line-height: 40px;
-            font-size: clamp(18px, 5vw, 20px);
-            font-weight: bold;
-            box-shadow: 0 2px 10px rgba(255,68,68,0.3);
-            transition: all 0.3s;
-            opacity: 0;
-        }
-
+        .space-error { position: relative; display: inline-block; background-color: rgba(255, 68, 68, 0.3); border-radius: 3px; }
+        #statusIndicator { width: clamp(100px, 30vw, 130px); height: 40px; background: linear-gradient(45deg, #ff4444, #ff6666); margin: 15px auto; border-radius: 20px; line-height: 40px; font-size: clamp(18px, 5vw, 20px); font-weight: bold; box-shadow: 0 2px 10px rgba(255,68,68,0.3); transition: all 0.3s; opacity: 0; }
         #statusIndicator.active { opacity: 1; }
-        #statusIndicator.green {
-            background: linear-gradient(45deg, #4caf50, #66bb6a);
-            box-shadow: 0 2px 10px rgba(76,175,80,0.3);
-        }
-
-        #startButton, #restartButton, #downloadResultBtn {
-            padding: 12px 30px;
-            font-size: clamp(18px, 5vw, 22px);
-            margin: 10px;
-            cursor: pointer;
-            border: none;
-            border-radius: 25px;
-            background: linear-gradient(45deg, #4caf50, #66bb6a);
-            color: white;
-            transition: transform 0.3s, box-shadow 0.3s, opacity 0.5s; /* Added opacity transition */
-            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.4);
-        }
-
-        #startButton:hover, #restartButton:hover, #downloadResultBtn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.6);
-        }
-
-        /* --- NEW: Style for the disabled restart button --- */
-        #restartButton:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none; /* Prevent hover effect when disabled */
-            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.4); /* Keep shadow consistent */
-        }
-
-        #resultButtons {
-            display: none;
-            flex-direction: column;
-            width: 90%;
-            max-width: 400px;
-            gap: 15px;
-            margin: 20px auto;
-        }
-
-        #stats, #highScore, #message {
-            font-size: clamp(16px, 4.5vw, 20px);
-            margin-top: 20px;
-            background: rgba(255, 255, 255, 0.05);
-            padding: 12px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            max-width: 90vw;
-            width: 100%;
-            box-sizing: border-box;
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(40, 42, 54, 0.98);
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            width: 95%;
-            max-width: 550px;
-            max-height: 90vh;
-            overflow-y: auto;
-            z-index: 1000;
-            backdrop-filter: blur(10px);
-            border: 1px solid #00ffcc;
-        }
-
-        .modal-header {
-            font-size: clamp(24px, 7vw, 28px);
-            margin-bottom: 20px;
-            color: #00ffcc;
-            text-shadow: 0 0 10px #00ffcc;
-            cursor: pointer;
-        }
-
-        #resultText {
-            background: rgba(0,0,0,0.4);
-            padding: 15px;
-            border-radius: 15px;
-            font-size: clamp(14px, 4vw, 17px);
-            line-height: 2;
-            margin: 20px 0;
-            text-align: left;
-            border: 1px dashed #00ffcc;
-            color: #ffffff;
-            white-space: pre-wrap;
-            font-family: 'Courier New', monospace;
-        }
-
-        .download-btn, .copy-btn {
-            width: 90%;
-            max-width: 350px;
-            padding: 12px;
-            font-size: clamp(16px, 4.5vw, 20px);
-            margin: 10px auto;
-            display: block;
-            border: none;
-            border-radius: 25px;
-            cursor: pointer;
-            color: white;
-        }
-
+        #statusIndicator.green { background: linear-gradient(45deg, #4caf50, #66bb6a); box-shadow: 0 2px 10px rgba(76,175,80,0.3); }
+        #startButton, #restartButton, #downloadResultBtn { padding: 12px 30px; font-size: clamp(18px, 5vw, 22px); margin: 10px; cursor: pointer; border: none; border-radius: 25px; background: linear-gradient(45deg, #4caf50, #66bb6a); color: white; transition: transform 0.3s, box-shadow 0.3s, opacity 0.5s; box-shadow: 0 4px 15px rgba(76, 175, 80, 0.4); }
+        #startButton:hover, #restartButton:hover, #downloadResultBtn:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(76, 175, 80, 0.6); }
+        #restartButton:disabled { opacity: 0.6; cursor: not-allowed; transform: none; box-shadow: 0 4px 15px rgba(76, 175, 80, 0.4); }
+        #resultButtons { display: none; flex-direction: column; width: 90%; max-width: 400px; gap: 15px; margin: 20px auto; }
+        #stats, #highScore, #message { font-size: clamp(16px, 4.5vw, 20px); margin-top: 20px; background: rgba(255, 255, 255, 0.05); padding: 12px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); max-width: 90vw; width: 100%; box-sizing: border-box; }
+        .modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(40, 42, 54, 0.98); padding: 20px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); width: 95%; max-width: 550px; max-height: 90vh; overflow-y: auto; z-index: 1000; backdrop-filter: blur(10px); border: 1px solid #00ffcc; }
+        .modal-header { font-size: clamp(24px, 7vw, 28px); margin-bottom: 20px; color: #00ffcc; text-shadow: 0 0 10px #00ffcc; cursor: pointer; }
+        #resultText { background: rgba(0,0,0,0.4); padding: 15px; border-radius: 15px; font-size: clamp(14px, 4vw, 17px); line-height: 2; margin: 20px 0; text-align: left; border: 1px dashed #00ffcc; color: #ffffff; white-space: pre-wrap; font-family: 'Courier New', monospace; }
+        .download-btn, .copy-btn { width: 90%; max-width: 350px; padding: 12px; font-size: clamp(16px, 4.5vw, 20px); margin: 10px auto; display: block; border: none; border-radius: 25px; cursor: pointer; color: white; }
         .download-btn { background: linear-gradient(45deg, #0088ff, #00ccff); box-shadow: 0 4px 15px rgba(0, 136, 255, 0.4); }
         .copy-btn { background: linear-gradient(45deg, #ff6b6b, #ff8787); }
-
         .download-btn:hover, .copy-btn:hover { transform: translateY(-3px); }
-
-        #toast {
-            position: fixed;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #00ff88;
-            color: black;
-            padding: 15px 30px;
-            border-radius: 50px;
-            font-weight: bold;
-            z-index: 2000;
-            display: none;
-            box-shadow: 0 5px 15px rgba(0,255,0,0.3);
-        }
-
-        .modal-close {
-            position: absolute;
-            top: 15px;
-            right: 20px;
-            font-size: 30px;
-            color: #ff4444;
-            cursor: pointer;
-        }
-
+        #toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: #00ff88; color: black; padding: 15px 30px; border-radius: 50px; font-weight: bold; z-index: 2000; display: none; box-shadow: 0 5px 15px rgba(0,255,0,0.3); }
+        .modal-close { position: absolute; top: 15px; right: 20px; font-size: 30px; color: #ff4444; cursor: pointer; }
         .modal-close:hover { color: #ff6666; }
-
         .modal-content { display: none; font-size: clamp(15px, 4vw, 16px); text-align: left; color: #ffffff; }
         .modal-content.active { display: block; }
-
         .modal-buttons { display: flex; justify-content: space-around; flex-wrap: wrap; gap: 10px; }
-        .modal-button {
-            padding: 10px 20px;
-            font-size: 18px;
-            border: none;
-            border-radius: 20px;
-            cursor: pointer;
-            min-width: 100px;
-        }
-
-        #soundOnButton.green, #soundOffButton.green {
-            background: linear-gradient(45deg, #4caf50, #66bb6a);
-            color: white;
-        }
-
-        #soundOnButton.grey, #soundOffButton.grey {
-            background: linear-gradient(45deg, #666, #999);
-            color: white;
-        }
-
-        #yesButton, #noButton {
-            background: linear-gradient(45deg, #4caf50, #66bb6a);
-            color: white;
-        }
-
+        .modal-button { padding: 10px 20px; font-size: 18px; border: none; border-radius: 20px; cursor: pointer; min-width: 100px; }
+        #soundOnButton.green, #soundOffButton.green { background: linear-gradient(45deg, #4caf50, #66bb6a); color: white; }
+        #soundOnButton.grey, #soundOffButton.grey { background: linear-gradient(45deg, #666, #999); color: white; }
+        #yesButton, #noButton { background: linear-gradient(45deg, #4caf50, #66bb6a); color: white; }
         .modal-button:hover { transform: translateY(-2px); }
-
-        @media (min-width: 768px) {
-            #resultButtons { flex-direction: row; justify-content: center; }
-            #mobileMenuBtn, #mobileMenu { display: none !important; }
-        }
-
-        @media (max-width: 767px) {
-            #desktopIcons, #homeIcon { display: none; }
-            #mobileMenuBtn { display: block; }
-            body { padding-top: 70px; }
-        }
+        #adModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.9); z-index: 9998; display: flex; justify-content: center; align-items: center; flex-direction: column; }
+        #adContent { max-width: 90%; max-height: 80%; }
+        #adContent img { max-width: 100%; max-height: 100%; object-fit: contain; }
+        #skipAdBtn { display: none; position: absolute; top: 20px; right: 20px; padding: 10px 20px; font-size: 18px; background: #ff4444; color: white; border: none; border-radius: 25px; cursor: pointer; z-index: 9999; }
+        #adTimer { position: absolute; top: 20px; right: 20px; color: white; background: rgba(0,0,0,0.7); padding: 10px; border-radius: 50%; font-size: 20px; }
+        @media (min-width: 768px) { #resultButtons { flex-direction: row; justify-content: center; } #mobileMenuBtn, #mobileMenu { display: none !important; } }
+        @media (max-width: 767px) { #desktopIcons, #homeIcon { display: none; } #mobileMenuBtn { display: block; } body { padding-top: 70px; } }
     </style>
 </head>
 <body>
-    <!-- HTML is the same -->
-    <div id="mobileMenuBtn">☰</div>
-    <div id="mobileMenu">
-        <span id="mobileSoundIcon">🔊</span>
-        <span id="mobileResetIcon">⚙️</span>
-        <span id="mobileAboutIcon">ℹ️</span>
-        <span id="mobileHomeIcon">🏠</span>
-    </div>
-    <div id="desktopIcons">
-        <span id="soundIcon">🔊</span>
-        <span id="resetIcon">⚙️</span>
-        <span id="aboutIcon">ℹ️</span>
-    </div>
-    <span id="homeIcon">🏠</span>
-    <img src="logo/LOGO.png" alt="Flash Fingers Logo" id="gameLogo">
-    <h1>Flash Fingers - Typing Game</h1>
-    <button id="startButton">Start</button>
-    <div id="statusIndicator">0.00</div>
-    
-    <div id="gameContainer">
-        <div id="display"></div>
-        <textarea id="typingBox" autocorrect="off" autocapitalize="off" spellcheck="false"></textarea>
-    </div>
-
-    <div id="stats"></div>
-    <div id="highScore">High Score: <span id="highScoreValue"></span> 🏆</div>
-    <div id="message"></div>
-    <div id="resultButtons">
-        <button id="downloadResultBtn">📥 Download Result</button>
-        <button id="restartButton">Restart</button>
-    </div>
-    <div id="resultModal" class="modal"><span class="modal-close" id="resultModalClose">✖</span><div class="modal-header">🏆 Your Typing Result</div><pre id="resultText">Loading...</pre><button class="download-btn" id="modalDownloadBtn">💾 Download Result</button><button class="copy-btn" id="copyResultBtn">📋 Copy Result</button></div>
-    <div id="toast">Result copied to clipboard! ✅</div>
-    <div id="soundModal" class="modal"><span id="soundModalClose" class="modal-close">✖</span><div class="modal-header">Sound Settings</div><div class="modal-buttons"><button id="soundOnButton" class="modal-button">ON</button><button id="soundOffButton" class="modal-button">OFF</button></div></div>
-    <div id="resetModal" class="modal"><span id="resetModalClose" class="modal-close">✖</span><div class="modal-header">Do you want to reset high score?</div><div class="modal-buttons"><button id="yesButton" class="modal-button">Yes</button><button id="noButton" class="modal-button">No</button></div></div>
-    <div id="aboutModal" class="modal"><span id="aboutModalClose" class="modal-close">✖</span><div class="modal-header" id="howToPlayHeader">How to Play</div><div class="modal-header" id="aboutGameHeader">About Game</div><div class="modal-header" id="aboutCreatorHeader">About Creator</div><div class="modal-header" id="contactHeader">Contact Info</div><div id="howToPlayContent" class="modal-content active"><p>1. Press <strong>Enter</strong> or click "Start" to begin.<br>2. A random sentence will appear — get ready!<br>3. <strong>Timer starts when you type the first letter</strong> (and that letter counts!)<br>4. Type accurately and press Enter to finish.<br>5. See your Time, WPM, Accuracy, and more!<br>6. Press <strong>Enter</strong> again or click Restart for next round.<br><strong>New:</strong> Multiple sentences + WPM + Space mistake visible!</p></div><div id="aboutGameContent" class="modal-content"><p>This game helps improve typing speed and accuracy with random sentences, WPM tracking, and a sleek design.</p></div><div id="aboutCreatorContent" class="modal-content"><p>Developed by Elia Haider from Baltistan, Pakistan.</p></div><div id="contactContent" class="modal-content"><p>Email: <a href="mailto:haiderhashmi1120@gmail.com">haiderhashmi1120@gmail.com</a><br>YouTube: <a href="https://www.youtube.com/channel/UCAaSY7QKjtxdsIphuZEcO-g" target="_blank">Elia Haider's Channel</a></p></div></div>
+    <!-- HTML waisa hi hai -->
+    <div id="mobileMenuBtn">☰</div><div id="mobileMenu"><span id="mobileSoundIcon">🔊</span><span id="mobileResetIcon">⚙️</span><span id="mobileAboutIcon">ℹ️</span><span id="mobileHomeIcon">🏠</span></div><div id="desktopIcons"><span id="soundIcon">🔊</span><span id="resetIcon">⚙️</span><span id="aboutIcon">ℹ️</span></div><span id="homeIcon">🏠</span><img src="logo/LOGO.png" alt="Flash Fingers Logo" id="gameLogo"><h1>Flash Fingers - Typing Game</h1><button id="startButton">Start</button><div id="statusIndicator">0.00</div><div id="gameContainer"><div id="display"></div><textarea id="typingBox" autocorrect="off" autocapitalize="off" spellcheck="false"></textarea></div><div id="stats"></div><div id="highScore">High Score: <span id="highScoreValue"></span> 🏆</div><div id="message"></div><div id="resultButtons"><button id="downloadResultBtn">📥 Download Result</button><button id="restartButton">Restart</button></div><div id="resultModal" class="modal"><span class="modal-close" id="resultModalClose">✖</span><div class="modal-header">🏆 Your Typing Result</div><pre id="resultText">Loading...</pre><button class="download-btn" id="modalDownloadBtn">💾 Download Result</button><button class="copy-btn" id="copyResultBtn">📋 Copy Result</button></div><div id="toast">Result copied to clipboard! ✅</div><div id="soundModal" class="modal"><span id="soundModalClose" class="modal-close">✖</span><div class="modal-header">Sound Settings</div><div class="modal-buttons"><button id="soundOnButton" class="modal-button">ON</button><button id="soundOffButton" class="modal-button">OFF</button></div></div><div id="resetModal" class="modal"><span id="resetModalClose" class="modal-close">✖</span><div class="modal-header">Do you want to reset high score?</div><div class="modal-buttons"><button id="yesButton" class="modal-button">Yes</button><button id="noButton" class="modal-button">No</button></div></div><div id="aboutModal" class="modal"><span id="aboutModalClose" class="modal-close">✖</span><div class="modal-header" id="howToPlayHeader">How to Play</div><div class="modal-header" id="aboutGameHeader">About Game</div><div class="modal-header" id="aboutCreatorHeader">About Creator</div><div class="modal-header" id="contactHeader">Contact Info</div><div id="howToPlayContent" class="modal-content active"><p>1. Press <strong>Enter</strong> or click "Start" to begin.<br>2. A random sentence will appear — get ready!<br>3. <strong>Timer starts when you type the first letter</strong> (and that letter counts!)<br>4. Type accurately and press Enter to finish.<br>5. See your Time, WPM, Accuracy, and more!<br>6. Press <strong>Enter</strong> again or click Restart for next round.<br><strong>New:</strong> Multiple sentences + WPM + Space mistake visible!</p></div><div id="aboutGameContent" class="modal-content"><p>This game helps improve typing speed and accuracy with random sentences, WPM tracking, and a sleek design.</p></div><div id="aboutCreatorContent" class="modal-content"><p>Developed by Elia Haider from Baltistan, Pakistan.</p></div><div id="contactContent" class="modal-content"><p>Email: <a href="mailto:haiderhashmi1120@gmail.com">haiderhashmi1120@gmail.com</a><br>YouTube: <a href="https://www.youtube.com/channel/UCAaSY7QKjtxdsIphuZEcO-g" target="_blank">Elia Haider's Channel</a></p></div></div>
+    <div id="adModal" style="display: none;"><span id="adTimer">3</span><button id="skipAdBtn">Skip</button><a id="adContent" href="https://www.instagram.com/your_advertiser_profile" target="_blank"><img src="https://via.placeholder.com/800x400.png?text=Your+Ad+Here" alt="Advertisement"></a></div>
     <audio id="buttonSound" src="sounds/button.mp3"></audio><audio id="wrongSound" src="sounds/wong.mp3"></audio><audio id="highScoreSound" src="sounds/high score.mp3"></audio><audio id="bg1Sound" src="sounds/bg1.mp3" loop></audio><audio id="bg2Sound" src="sounds/bg2.mp3" loop></audio><audio id="typeSound" src="sounds/type.mp3"></audio><audio id="enterSound" src="sounds/enter.mp3"></audio><audio id="startSound" src="sounds/start.mp3"></audio>
-
+    
     <script>
+        // Poora JavaScript waisa hi hai, bas jahan zaroorat hai wahan gtag() add kiya gaya hai
         const sentences = ["The quick brown fox jumps over the lazy dog.", "Pack my box with five dozen liquor jugs.", "The five boxing wizards jump quickly.", "How vexingly quick daft zebras jump!", "Bright vixens jump; dozy fowl quack.", "Sphinx of black quartz, judge my vow.", "Two driven jocks help fax my big quiz.", "Jinxed wizards pluck ivy from the big quilt.", "Crazy Fredrick bought many very exquisite opal jewels.", "Jived fox nymph grabs quick waltz.", "Glib jocks quiz nymph to vex dwarf.", "Blowzy red vixens fight for a quick jump.", "Joaquin Phoenix was gazed by MTV for luck.", "Waxy and quivering, jocks fumble the pizza.", "The jay, pig, fox, zebra and my wolves quack!"];
-        
-        // --- All variables ---
         let currentSentence = "", userInput = "", startTime = null, mistakeIndices = new Set(), highScore = localStorage.getItem("highScore") ? parseFloat(localStorage.getItem("highScore")) : null, gameReady = false, gameInProgress = false, gameFinished = false, timerInterval = null, lastResultText = "";
-        
-        // --- NEW: Variable to control restart capability ---
         let canRestart = true;
-
         const display = document.getElementById("display"), typingBox = document.getElementById("typingBox"), stats = document.getElementById("stats"), highScoreValue = document.getElementById("highScoreValue"), startButton = document.getElementById("startButton"), restartButton = document.getElementById("restartButton"), statusIndicator = document.getElementById("statusIndicator"), message = document.getElementById("message"), resultButtons = document.getElementById("resultButtons"), downloadResultBtn = document.getElementById("downloadResultBtn"), buttonSound = document.getElementById("buttonSound"), wrongSound = document.getElementById("wrongSound"), highScoreSound = document.getElementById("highScoreSound"), bg1Sound = document.getElementById("bg1Sound"), bg2Sound = document.getElementById("bg2Sound"), typeSound = document.getElementById("typeSound"), enterSound = document.getElementById("enterSound"), startSound = document.getElementById("startSound"), soundModal = document.getElementById("soundModal"), soundModalClose = document.getElementById("soundModalClose"), soundOnButton = document.getElementById("soundOnButton"), soundOffButton = document.getElementById("soundOffButton"), resetModal = document.getElementById("resetModal"), resetModalClose = document.getElementById("resetModalClose"), yesButton = document.getElementById("yesButton"), noButton = document.getElementById("noButton"), aboutModal = document.getElementById("aboutModal"), aboutModalClose = document.getElementById("aboutModalClose"), howToPlayHeader = document.getElementById("howToPlayHeader"), aboutGameHeader = document.getElementById("aboutGameHeader"), aboutCreatorHeader = document.getElementById("aboutCreatorHeader"), contactHeader = document.getElementById("contactHeader"), howToPlayContent = document.getElementById("howToPlayContent"), aboutGameContent = document.getElementById("aboutGameContent"), aboutCreatorContent = document.getElementById("aboutCreatorContent"), contactContent = document.getElementById("contactContent"), soundIcon = document.getElementById("soundIcon"), resetIcon = document.getElementById("resetIcon"), aboutIcon = document.getElementById("aboutIcon"), homeIcon = document.getElementById("homeIcon"), mobileMenuBtn = document.getElementById("mobileMenuBtn"), mobileMenu = document.getElementById("mobileMenu"), mobileSoundIcon = document.getElementById("mobileSoundIcon"), mobileResetIcon = document.getElementById("mobileResetIcon"), mobileAboutIcon = document.getElementById("mobileAboutIcon"), mobileHomeIcon = document.getElementById("mobileHomeIcon"), resultModal = document.getElementById("resultModal"), resultModalClose = document.getElementById("resultModalClose"), resultText = document.getElementById("resultText"), modalDownloadBtn = document.getElementById("modalDownloadBtn"), copyResultBtn = document.getElementById("copyResultBtn"), toast = document.getElementById("toast");
+        const adModal = document.getElementById("adModal");
+        const skipAdBtn = document.getElementById("skipAdBtn");
+        const adTimer = document.getElementById("adTimer");
+        const adContent = document.getElementById("adContent"); // Ad content ko select kiya
         let soundEnabled = localStorage.getItem("soundEnabled") !== "false";
         if (soundEnabled) bg2Sound.play();
-
         function playSound(audio) { if (soundEnabled) { audio.currentTime = 0; audio.play().catch(() => {}); } }
         function updateSoundButtons() { soundOnButton.className = "modal-button " + (soundEnabled ? "green" : "grey"); soundOffButton.className = "modal-button " + (!soundEnabled ? "green" : "grey"); }
         updateSoundButtons();
         function showAboutSection(section) { howToPlayContent.classList.remove("active"); aboutGameContent.classList.remove("active"); aboutCreatorContent.classList.remove("active"); contactContent.classList.remove("active"); section.classList.add("active"); }
-
         function updateDisplay() {
             display.innerHTML = "";
             for (let i = 0; i < currentSentence.length; i++) {
                 const char = currentSentence[i];
                 const span = document.createElement("span");
                 if (i < userInput.length) {
-                    if (userInput[i] === char) {
-                        span.className = "green-text";
-                    } else {
-                        if (char === " ") span.className = "space-error";
-                        else span.className = "red-text";
+                    if (userInput[i] === char) { span.className = "green-text"; } else {
+                        if (char === " ") span.className = "space-error"; else span.className = "red-text";
                         mistakeIndices.add(i);
                     }
                 }
                 span.textContent = char === " " ? "\u00A0" : char; 
                 display.appendChild(span);
             }
-
             const currentSpan = display.children[userInput.length];
-            if (currentSpan) {
-                currentSpan.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
-            }
+            if (currentSpan) { currentSpan.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" }); }
         }
-
         function prepareGame() {
-            canRestart = true; // Make sure restart is enabled when a new game is prepared
-            currentSentence = sentences[Math.floor(Math.random() * sentences.length)];
-            userInput = ""; mistakeIndices.clear(); startTime = null;
-            gameReady = true; gameInProgress = false; gameFinished = false;
-            statusIndicator.classList.remove("active", "green"); statusIndicator.textContent = "0.00";
-            updateDisplay();
-            display.style.display = "block";
-            resultButtons.style.display = "none";
-            restartButton.disabled = false; // Ensure button is enabled
-            stats.innerHTML = ""; message.innerHTML = "";
-            highScoreValue.innerText = highScore ? highScore.toFixed(2) + " sec" : "No record yet";
-            startButton.style.display = "none";
-            if (soundEnabled) { bg2Sound.pause(); bg1Sound.play(); }
-            typingBox.value = ""; 
-            typingBox.focus(); 
+            canRestart = true; currentSentence = sentences[Math.floor(Math.random() * sentences.length)]; userInput = ""; mistakeIndices.clear(); startTime = null; gameReady = true; gameInProgress = false; gameFinished = false; statusIndicator.classList.remove("active", "green"); statusIndicator.textContent = "0.00"; updateDisplay(); display.style.display = "block"; resultButtons.style.display = "none"; restartButton.disabled = false; stats.innerHTML = ""; message.innerHTML = ""; highScoreValue.innerText = highScore ? highScore.toFixed(2) + " sec" : "No record yet"; startButton.style.display = "none"; if (soundEnabled) { bg2Sound.pause(); bg1Sound.play(); } typingBox.value = ""; typingBox.focus(); 
         }
-
         function startTimer() {
             if (gameInProgress) return;
             gameInProgress = true;
@@ -502,103 +126,94 @@
             statusIndicator.classList.add("active", "green");
             startTime = new Date();
             playSound(startSound);
-            timerInterval = setInterval(() => {
-                const elapsed = (new Date() - startTime) / 1000;
-                statusIndicator.textContent = elapsed.toFixed(2);
-            }, 10);
+            timerInterval = setInterval(() => { const elapsed = (new Date() - startTime) / 1000; statusIndicator.textContent = elapsed.toFixed(2); }, 10);
         }
-
         function finishGame() {
             if (!gameInProgress) return;
-
             playSound(enterSound);
-            const endTime = new Date();
-            const actualTime = (endTime - startTime) / 1000;
-            const correctChars = currentSentence.length - mistakeIndices.size;
-            const grossWPM = Math.round((currentSentence.length / 5) / (actualTime / 60)) || 0;
-            const penalty = mistakeIndices.size * 0.5;
-            const totalTime = actualTime + penalty;
-            const netWPM = Math.round((correctChars / 5) / (actualTime / 60)) || 0;
-            const accuracy = ((correctChars / currentSentence.length) * 100).toFixed(1);
-
+            const endTime = new Date(); const actualTime = (endTime - startTime) / 1000; const correctChars = currentSentence.length - mistakeIndices.size; const grossWPM = Math.round((currentSentence.length / 5) / (actualTime / 60)) || 0; const penalty = mistakeIndices.size * 0.5; const totalTime = actualTime + penalty; const netWPM = Math.round((correctChars / 5) / (actualTime / 60)) || 0; const accuracy = ((correctChars / currentSentence.length) * 100).toFixed(1);
             lastResultText = `🏆 FLASH FINGERS - TYPING RESULT 🏆\n\n📝 Sentence: "${currentSentence}"\n\n⏱  Time Taken: ${actualTime.toFixed(2)} seconds\n🏃 Raw WPM: ${grossWPM}\n🎯 Adjusted WPM: ${netWPM}\n⏰ Penalty: ${penalty.toFixed(2)} sec (${mistakeIndices.size} mistakes × 0.5s)\n❌ Mistakes: ${mistakeIndices.size}\n🎯 Accuracy: ${accuracy}%\n\n${accuracy >= 90 && (!highScore || totalTime < highScore) ? "🏆 NEW HIGH SCORE BROKEN! 🏆" : "High Score: " + (highScore ? highScore.toFixed(2) + " sec" : "No record yet")}\n\nDeveloped by Elia Haider\nPlay again at: ${window.location.href}`;
             stats.innerHTML = `⏱ Time Taken: ${actualTime.toFixed(2)} sec<br>🏃 Raw WPM: ${grossWPM}<br>🎯 Adjusted WPM: ${netWPM}<br>⏰ Penalty: ${penalty.toFixed(2)} sec<br>❌ Mistakes: ${mistakeIndices.size}<br>🎯 Accuracy: ${accuracy}%`;
-
-            if (accuracy >= 90 && (!highScore || totalTime < highScore)) {
-                highScore = totalTime;
-                localStorage.setItem("highScore", highScore);
-                message.innerHTML = "<span style='color:#00ff00; font-size:24px;'>🏆 High Score Broken! 🏆</span>";
-                playSound(highScoreSound);
-                setTimeout(() => message.innerHTML = "", 3000);
-            }
-
+            if (accuracy >= 90 && (!highScore || totalTime < highScore)) { highScore = totalTime; localStorage.setItem("highScore", highScore); message.innerHTML = "<span style='color:#00ff00; font-size:24px;'>🏆 High Score Broken! 🏆</span>"; playSound(highScoreSound); setTimeout(() => message.innerHTML = "", 3000); }
             highScoreValue.innerText = highScore ? highScore.toFixed(2) + " sec" : "No record yet";
-            resultButtons.style.display = "flex";
-            statusIndicator.classList.remove("active", "green");
-            clearInterval(timerInterval);
-            timerInterval = null;
-            if (soundEnabled) { bg1Sound.pause(); bg2Sound.play(); }
-
-            gameFinished = true;
-            gameInProgress = false;
-            gameReady = false;
-
-            // --- NEW: Disable restart functionality for 3 seconds ---
-            canRestart = false;
-            restartButton.disabled = true; // Visually disable the button
-
-            setTimeout(() => {
-                canRestart = true;
-                restartButton.disabled = false; // Re-enable after 3 seconds
-            }, 3000);
+            resultButtons.style.display = "flex"; statusIndicator.classList.remove("active", "green"); clearInterval(timerInterval); timerInterval = null; if (soundEnabled) { bg1Sound.pause(); bg2Sound.play(); } gameFinished = true; gameInProgress = false; gameReady = false; canRestart = false; restartButton.disabled = true; setTimeout(() => { canRestart = true; restartButton.disabled = false; }, 3000);
         }
-        
         typingBox.addEventListener("input", (e) => {
             if (gameFinished) return;
-            if (!gameInProgress && gameReady) {
-                startTimer();
+            if (!gameInProgress && gameReady) { 
+                // GA Event: Game Started
+                gtag('event', 'game_start');
+                startTimer(); 
             }
-            userInput = typingBox.value;
-            updateDisplay();
-
-            const typedChar = userInput[userInput.length - 1];
-            const targetChar = currentSentence[userInput.length - 1];
-            if (typedChar) {
-                playSound(typedChar !== targetChar ? wrongSound : typeSound);
-            }
-
-            if (userInput.length === currentSentence.length) {
-                finishGame();
-            }
+            userInput = typingBox.value; updateDisplay(); const typedChar = userInput[userInput.length - 1]; const targetChar = currentSentence[userInput.length - 1]; if (typedChar) { playSound(typedChar !== targetChar ? wrongSound : typeSound); } if (userInput.length === currentSentence.length) { finishGame(); }
         });
-
         document.addEventListener("keydown", function(e) {
-            if (startButton.style.display !== "none" && e.key === "Enter") {
+            if (startButton.style.display !== "none" && e.key === "Enter") { e.preventDefault(); playSound(buttonSound); prepareGame(); }
+            if (gameFinished && e.key === "Enter") {
+                if (!canRestart) return;
+                // GA Event: Game Restarted
+                gtag('event', 'game_restart', { 'method': 'enter_key' });
                 e.preventDefault(); playSound(buttonSound); prepareGame();
             }
-            
-            // --- UPDATED: Check 'canRestart' flag before restarting with Enter key ---
-            if (gameFinished && e.key === "Enter") {
-                if (!canRestart) return; // If restart is not allowed, do nothing
-                e.preventDefault();
-                playSound(buttonSound);
-                prepareGame();
-            }
+        });
+        function showAd() {
+            adModal.style.display = 'flex'; skipAdBtn.style.display = 'none'; adTimer.style.display = 'block'; let countdown = 3; adTimer.textContent = countdown;
+            const countdownInterval = setInterval(() => {
+                countdown--; adTimer.textContent = countdown;
+                if (countdown <= 0) { clearInterval(countdownInterval); adTimer.style.display = 'none'; skipAdBtn.style.display = 'block'; }
+            }, 1000);
+        }
+        function showResult() { resultText.textContent = lastResultText; resultModal.style.display = "block"; playSound(buttonSound); }
+        
+        // --- EVENT LISTENERS WITH ANALYTICS ---
+        
+        startButton.addEventListener("click", () => { 
+            // GA Event: Game Started (agar koi pehla akshar type karne ke bajaye button dabata hai)
+            gtag('event', 'game_start');
+            playSound(buttonSound); 
+            prepareGame(); 
         });
 
-        // --- UPDATED: Check 'canRestart' flag on button click ---
-        restartButton.addEventListener("click", () => {
-            if (!canRestart) return; // If restart is not allowed, do nothing
-            playSound(buttonSound);
-            prepareGame();
+        restartButton.addEventListener("click", () => { 
+            if (!canRestart) return; 
+            // GA Event: Game Restarted
+            gtag('event', 'game_restart', { 'method': 'button_click' });
+            playSound(buttonSound); 
+            prepareGame(); 
+        });
+        
+        downloadResultBtn.addEventListener("click", () => { 
+            // GA Event: Ad Shown
+            gtag('event', 'ad_shown');
+            showAd(); 
+        });
+        
+        skipAdBtn.addEventListener("click", () => {
+            // GA Event: Ad Skipped
+            gtag('event', 'ad_skipped');
+            adModal.style.display = 'none';
+            showResult();
         });
 
-        // --- Other button listeners (unchanged) ---
-        startButton.addEventListener("click", () => { playSound(buttonSound); prepareGame(); });
-        downloadResultBtn.addEventListener("click", () => { resultText.textContent = lastResultText; resultModal.style.display = "block"; playSound(buttonSound); });
+        adContent.addEventListener('click', () => {
+            // GA Event: Ad Clicked
+            gtag('event', 'ad_clicked');
+        });
+
+        modalDownloadBtn.addEventListener("click", () => { 
+            // GA Event: Result Downloaded
+            gtag('event', 'result_downloaded');
+            const blob = new Blob([lastResultText], { type: "text/plain" }); const url = URL.createObjectURL(blob); const a = document.createElement("a"); a.href = url; a.download = "flashfingers_result.txt"; a.click(); URL.revokeObjectURL(url); playSound(buttonSound); 
+        });
+        
+        copyResultBtn.addEventListener("click", () => { 
+            // GA Event: Result Copied
+            gtag('event', 'result_copied');
+            navigator.clipboard.writeText(lastResultText).then(() => { toast.style.display = "block"; setTimeout(() => toast.style.display = "none", 3000); playSound(buttonSound); }); 
+        });
+        
+        // --- Baaki ke event listeners waise hi hain ---
         resultModalClose.addEventListener("click", () => { resultModal.style.display = "none"; playSound(buttonSound); });
-        modalDownloadBtn.addEventListener("click", () => { const blob = new Blob([lastResultText], { type: "text/plain" }); const url = URL.createObjectURL(blob); const a = document.createElement("a"); a.href = url; a.download = "flashfingers_result.txt"; a.click(); URL.revokeObjectURL(url); playSound(buttonSound); });
-        copyResultBtn.addEventListener("click", () => { navigator.clipboard.writeText(lastResultText).then(() => { toast.style.display = "block"; setTimeout(() => toast.style.display = "none", 3000); playSound(buttonSound); }); });
         mobileMenuBtn.addEventListener("click", () => { playSound(buttonSound); mobileMenu.style.display = mobileMenu.style.display === "flex" ? "none" : "flex"; });
         mobileSoundIcon.addEventListener("click", () => { playSound(buttonSound); soundModal.style.display = "block"; mobileMenu.style.display = "none"; });
         mobileResetIcon.addEventListener("click", () => { playSound(buttonSound); resetModal.style.display = "block"; mobileMenu.style.display = "none"; });
